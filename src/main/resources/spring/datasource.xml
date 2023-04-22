@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+    <bean id="springJdbcDataSources" class="org.apache.commons.dbcp2.BasicDataSource">
+        <property name="driverClassName" value="com.mysql.cj.jdbc.Driver" />
+        <property name="url" value="${db.connection}" />
+        <property name="username" value="${db.username}" />
+        <property name="password" value="${db.password}" />
+    </bean>
+
+    <bean id="springSecurityJdbcDataSources" class="org.apache.commons.dbcp2.BasicDataSource">
+        <property name="driverClassName" value="com.mysql.cj.jdbc.Driver" />
+        <property name="url" value="${db.connection}" />
+        <property name="username" value="${db.username}" />
+        <property name="password" value="${db.password}" />
+    </bean>
+
+    <bean id="payslipDataSource" class="org.apache.commons.dbcp2.BasicDataSource">
+        <property name="driverClassName" value="com.mysql.cj.jdbc.Driver" />
+        <property name="url" value="${payslip.connection}" />
+        <property name="username" value="${payslip.username}" />
+        <property name="password" value="${payslip.password}" />
+    </bean>
+
+    <!-- ===================================== -->
+    <!-- Mybatis -->
+    <!-- ===================================== -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="springJdbcDataSources"/>
+        <!-- auto scan mapping xml files -->
+        <property name="mapperLocations">
+            <list value-type="java.lang.String">
+                <value>classpath:mybatis/*.xml</value>
+            </list>
+        </property>
+        <property name="configuration">
+            <bean class="org.apache.ibatis.session.Configuration">
+                <property name="returnInstanceForEmptyRow" value="true"/>
+            </bean>
+        </property>
+    </bean>
+
+    <!-- Scan the base package with the annotation -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.wahshoon.ism.mapper"/>
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+        <property name="annotationClass" value="com.wahshoon.ism.mapper.annotation.Mapper"/>
+    </bean>
+
+    <!-- Transaction manager -->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="springJdbcDataSources"/>
+    </bean>
+
+    <!-- ===================================== -->
+
+</beans>
