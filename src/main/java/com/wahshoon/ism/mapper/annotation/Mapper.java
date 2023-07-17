@@ -7,9 +7,4 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface Mapper {
-    /**
-     * Specify bean name when using org.mybatis.spring.mapper.MapperScannerConfigurer
-     */
-    String name() default "";
-}
+public @interface Mapper { }

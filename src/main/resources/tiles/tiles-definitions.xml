@@ -4,6 +4,16 @@
         "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
 <tiles-definitions>
     <definition name="mainTemplate" template="/dist/templates/main.jsp">
-        <put-attribute name="title" value="Unified Communications  Administration System" type="string"/>
+        <put-attribute name="title" value="Installation Service Management System" type="string" />
+        <put-attribute name="header" value="/dist/templates/header.jsp" />
+        <put-attribute name="footer" value="/dist/templates/footer.jsp" />
+        <put-attribute name="menu" value="/dist/templates/menu.jsp" />
+        <put-attribute name="body" value="/dist/templates/blank.jsp" />
     </definition>
+
+    <definition name="order" extends="mainTemplate">
+        <put-attribute name="title" value="Order Page" type="string" />
+        <put-attribute name="body" value="dist/main/order/order.jsp" />
+    </definition>
+
 </tiles-definitions>

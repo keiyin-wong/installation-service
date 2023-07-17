@@ -1,0 +1,17 @@
+{
+  "name": "webapp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "packjs -d -w"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@keiyin-wong/packtool-cli": "^1.0.0",
+    "jquery": "^3.7.0"
+  }
+}

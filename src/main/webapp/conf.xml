@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<webpack
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="node_modules/@keiyin-wong/packtool-cli/xml/config.xsd">
+
+    <sourceFolderPrefix>src/</sourceFolderPrefix>
+    <outputFolder>dist/</outputFolder>
+    <entry>
+        <outputFolder>assets/js/</outputFolder>
+        <cssOutputFolder>assets/css/</cssOutputFolder>
+        <includes>
+            <include>
+                <path>src/assets/js/vendor.js</path>
+                <outputPath></outputPath>
+            </include>
+        </includes>
+    </entry>
+    <assets>
+        <pattern>\.(svg|ico|woff|woff2|ttf|eot|jpg|png|webp|gif)$</pattern>
+        <outputFolder>assets/resources/</outputFolder>
+    </assets>
+    <htmlWebPackPlugin>
+        <includes>
+            <include>
+                <path>src/templates/main.jsp</path>
+                <chunks includeSelf="true" inject="head" scriptLoading="blocking">
+                    <chunk>vendor</chunk>
+                </chunks>
+            </include>
+            <include>
+                <path>src/**/*.jsp</path>
+                <chunks includeSelf="true" inject="body" scriptLoading="blocking" />
+            </include>
+        </includes>
+    </htmlWebPackPlugin>
+<!--
+    <loaders>
+        <stringReplaceLoader>
+            <test>\.js$</test>
+            <includes>
+                <include>node_modules/@unified/uc-admin-ui/src/assets/js/index.js</include>
+            </includes>
+            <options>
+                <multiple>
+                    <replace>
+                        <search>import "../scss/index.scss"</search>
+                        <replace/>
+                    </replace>
+                </multiple>
+            </options>
+        </stringReplaceLoader>
+    </loaders>
+-->
+</webpack>
