@@ -34,22 +34,4 @@
             </include>
         </includes>
     </htmlWebPackPlugin>
-<!--
-    <loaders>
-        <stringReplaceLoader>
-            <test>\.js$</test>
-            <includes>
-                <include>node_modules/@unified/uc-admin-ui/src/assets/js/index.js</include>
-            </includes>
-            <options>
-                <multiple>
-                    <replace>
-                        <search>import "../scss/index.scss"</search>
-                        <replace/>
-                    </replace>
-                </multiple>
-            </options>
-        </stringReplaceLoader>
-    </loaders>
--->
 </webpack>

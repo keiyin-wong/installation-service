@@ -13,7 +13,7 @@
 
     <definition name="order" extends="mainTemplate">
         <put-attribute name="title" value="Order Page" type="string" />
-        <put-attribute name="body" value="dist/main/order/order.jsp" />
+        <put-attribute name="body" value="/dist/main/order/order.jsp" />
     </definition>
 
 </tiles-definitions>
