@@ -21,5 +21,22 @@ export function jqueryDatatableProcessingFunction(e, processing, col) {
     } else {
         spinner.remove();
     }
+}
 
+/**
+ *
+ * @param e - event
+ * @param col - number of columns
+ */
+export function jqueryPreXhrProcessing(e, col) {
+    let $table = $(e.currentTarget);
+    let $tbody = $table.find("tbody");
+    let spinner = $("<tr>").append(
+        $("<td>").attr("colspan", col).append(
+            $("<div>").css("overflow-y", "hidden").append(
+                SpinnerBs()
+            )
+        )
+    );
+    $tbody.empty().append(spinner);
 }

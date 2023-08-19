@@ -19,17 +19,17 @@ public class PageController {
 
     @RequestMapping(value = "/order.html")
     public ModelAndView getOrderPage() {
-        return new ModelAndView("order");
+        return new ModelAndView(ViewConstant.ORDER_PAGE);
     }
 
-    @RequestMapping(value = "/order-detail.html")
+    @RequestMapping(value = "/edit-order.html")
     public ModelAndView getOrderDetailPage(
         @RequestParam(value = "orderId") String orderId
     ) {
         log.info("Getting order detail page for orderId={}", orderId);
         Map<String,Object> parameters = new HashMap<>();
         parameters.put("orderId", orderId);
-        return new ModelAndView(ViewConstant.ORDER_DETAIL_PAGE, parameters);
+        return new ModelAndView(ViewConstant.EDIT_ORDER, parameters);
     }
 
 }

@@ -16,4 +16,9 @@
         <put-attribute name="body" value="/dist/main/order/order.jsp" />
     </definition>
 
+    <definition name="edit-order" extends="mainTemplate">
+        <put-attribute name="title" value="Order Detail Page" type="string" />
+        <put-attribute name="body" value="/dist/main/edit-order/edit-order.jsp" />
+    </definition>
+
 </tiles-definitions>
