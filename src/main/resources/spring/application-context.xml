@@ -20,6 +20,12 @@ http://www.springframework.org/schema/mvc/spring-mvc.xsd">
         <property name="location" value="classpath:core.properties" />
     </bean>
 
+    <bean class="org.springframework.validation.beanvalidation.MethodValidationPostProcessor"/>
+
+    <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
+        <property name="providerClass" value="org.hibernate.validator.HibernateValidator"/>
+    </bean>
+
     <bean id="tilesConfigurer" class="org.springframework.web.servlet.view.tiles3.TilesConfigurer">
         <property name="definitions">
             <list>
@@ -37,6 +43,15 @@ http://www.springframework.org/schema/mvc/spring-mvc.xsd">
         <property name="prefix" value="/"/>
         <property name="suffix" value=".jsp"/>
         <property name="order" value="1"/>
+    </bean>
+
+    <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+        <property name="fallbackToSystemLocale" value="false" />
+        <property name="basenames">
+            <list>
+                <value>messages.controller</value>
+            </list>
+        </property>
     </bean>
 
     <import resource="classpath:spring/datasource.xml" />

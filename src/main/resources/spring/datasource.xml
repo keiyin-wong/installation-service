@@ -45,7 +45,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
     <!-- Scan the base package with the annotation -->
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-        <property name="basePackage" value="com.wahshoon.ism.mapper"/>
+        <property name="basePackage" value="com.wahshoon.ism"/>
         <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
         <property name="annotationClass" value="com.wahshoon.ism.mapper.annotation.Mapper"/>
     </bean>

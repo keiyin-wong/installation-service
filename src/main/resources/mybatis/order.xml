@@ -2,15 +2,41 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.wahshoon.ism.mapper.OrderMapper">
-    <resultMap id="orderResultMap" type="com.wahshoon.ism.model.Order">
+<mapper namespace="com.wahshoon.ism.order.OrderMapper">
+    <resultMap id="orderResultMap" type="com.wahshoon.ism.order.Order">
         <result property="id" column="id" javaType="String"/>
         <result property="date" column="date" javaType="Date"/>
         <result property="remarks" column="remarks" javaType="String"/>
         <result property="comments" column="comments" javaType="String"/>
     </resultMap>
-    <resultMap id="orderAndTotalResultMap" type="com.wahshoon.ism.model.Order" extends="orderResultMap">
+    <resultMap id="orderAndTotalResultMap" type="com.wahshoon.ism.order.Order" extends="orderResultMap">
         <result property="total" column="total_price" javaType="Integer"/>
+    </resultMap>
+
+    <resultMap id="OrderVOResultMap" type="com.wahshoon.ism.order.OrderVO">
+        <result property="id" column="order_id"/>
+        <result property="date" column="order_date"/>
+        <result property="total" column="order_total_price"/>
+        <result property="remarks" column="order_remarks"/>
+        <result property="comments" column="order_comments"/>
+    </resultMap>
+
+    <resultMap id="OrderVOWithoutTotalResultMap" type="com.wahshoon.ism.order.OrderVO">
+        <result property="id" column="order_id"/>
+        <result property="date" column="order_date"/>
+        <result property="remarks" column="order_remarks"/>
+        <result property="comments" column="order_comments"/>
+    </resultMap>
+
+    <resultMap id="OrderDetailResultMap" type="com.wahshoon.ism.order.OrderDetail">
+        <result property="orderId" column="od_order_id" />
+        <result property="lineNumber" column="od_line_number" />
+        <result property="serviceId" column="od_service_id" />
+        <result property="description" column="od_description" />
+        <result property="width" column="od_width" />
+        <result property="height" column="od_height" />
+        <result property="quantity" column="od_quantity" />
+        <result property="finalPrice" column="od_final_price" />
     </resultMap>
 
     <select id="getOrder" resultMap="orderResultMap">
@@ -18,6 +44,99 @@
         <where>
             id = #{orderId}
         </where>
+    </select>
+
+    <sql id="orderVOColumns">
+        ${alias}id as order_id,
+        ${alias}date as order_date,
+        ${alias}remarks as order_remarks,
+        ${alias}comments as order_comments
+    </sql>
+
+    <sql id="orderDetailColumns">
+        ${alias}order_id as od_order_id,
+        ${alias}line_number as od_line_number,
+        ${alias}service_id as od_service_id,
+        ${alias}description as od_description,
+        ${alias}width as od_width,
+        ${alias}height as od_height,
+        ${alias}quantity as od_quantity,
+        ${alias}final_price as od_final_price
+    </sql>
+
+    <select id="getOrderVOListForDatatable" resultMap="OrderVOResultMap">
+        SELECT
+            <trim suffix=",">
+                <include refid="orderVOColumns">
+                    <property name="alias" value=""/>
+                </include>
+            </trim>
+            total_price as order_total_price
+        FROM
+        (
+            SELECT
+                o.*,
+                COALESCE(SUM(
+                    CASE
+                    WHEN s.calculation_type=1 THEN od.final_price * od.quantity
+                    WHEN s.calculation_type=2 THEN TRUNCATE(ROUND((od.width/304.8),2) * ROUND((od.`height`/304.8),2) * od.final_price, 0)
+                    ELSE TRUNCATE(ROUND((od.width/304.8),2) * od.final_price, 0)
+                    END
+                ),0) AS total_price
+            FROM
+                `order` o
+            LEFT JOIN
+                `order_detail` od ON o.id = od.order_id
+            LEFT JOIN
+                `service` s ON s.id = od.service_id
+            GROUP BY
+                o.id
+        ) a
+        <if test="sortBy != null and sortBy.size() > 0" >
+            ORDER BY
+            <foreach collection="sortBy" index="key" item="sort" separator=",">
+                ${key} ${sort.value}
+            </foreach>
+        </if>
+        <if test="startRow != null and limit != null">
+            LIMIT #{startRow}, #{limit}
+        </if>
+    </select>
+
+    <select id="getOrderCountForDatatable" resultType="java.lang.Integer">
+        <![CDATA[
+        SELECT
+            COUNT(*)
+        FROM
+            `order`
+        ]]>
+    </select>
+
+    <select id="getOrderVOWithoutTotalById" resultMap="OrderVOWithoutTotalResultMap">
+        SELECT
+            <include refid="orderVOColumns">
+                <property name="alias" value=""/>
+            </include>
+        FROM
+            `order`
+        WHERE
+            id = #{orderId}
+    </select>
+
+    <!-- Order Detail -->
+    <select id="getOrderDetailListByOrderId" resultMap="OrderDetailResultMap">
+        SELECT
+        <include refid="orderDetailColumns">
+            <property name="alias" value=""/>
+        </include>
+        <![CDATA[
+        FROM
+            `order_detail`
+        WHERE
+            order_id = #{orderId}
+        ORDER BY
+            line_number
+        ]]>
     </select>
 
 </mapper>

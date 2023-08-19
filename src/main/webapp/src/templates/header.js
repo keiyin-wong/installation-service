@@ -18,7 +18,7 @@ function Header() {
                 $("<img>").prop({
                     src: logoImg
                 }),
-                $("<span>").addClass("d-none d-lg-block").text("Kei Yin")
+                $("<span>").addClass("d-none d-lg-block").text("WAH SHOON")
             ),
             $("<i>").addClass("bi bi-list toggle-sidebar-btn")
         )

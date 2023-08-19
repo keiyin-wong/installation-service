@@ -13,12 +13,17 @@
 	    <meta http-equiv="X-UA-Compatible" content="IE=edge">
 	    <meta name="viewport" content="width=device-width, initial-scale=1">
 		<title><tiles:insertAttribute name="title" /></title>
+		<script type="text/javascript">
+			var contextUrl = "${contextUrl}";
+		</script>
 	</head>
 	<body>
 		<tiles:insertAttribute name="header" />
 		<tiles:insertAttribute name="menu" />
 		<div id="loader"></div>
 		<div id="pop-message"></div>
-		<tiles:insertAttribute name="body" />
+		<main class="main" id="main">
+			<tiles:insertAttribute name="body" />
+		</main>
 	</body>
 </html>

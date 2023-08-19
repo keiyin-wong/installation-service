@@ -1,4 +1,4 @@
-package com.wahshoon.ism.model;
+package com.wahshoon.ism.order;
 
 
 public class OrderDetail {
@@ -11,9 +11,7 @@ public class OrderDetail {
 	double height;
 	int quantity;
 	int finalPrice;
-	int totalPrice;
-	int calculationType;
-	
+
 	
 	public String getOrderId() {
 		return orderId;
@@ -69,19 +67,7 @@ public class OrderDetail {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	public int getCalculationType() {
-		return calculationType;
-	}
-	public void setCalculationType(int calculationType) {
-		this.calculationType = calculationType;
-	}
-	public int getTotalPrice() {
-		return totalPrice;
-	}
-	public void setTotalPrice(int totalPrice) {
-		this.totalPrice = totalPrice;
-	}
-	
+
 	@Override
 	public String toString() {
 		return "["
@@ -93,8 +79,6 @@ public class OrderDetail {
 				+ "height=" + height + ", "
 				+ "quantity=" + quantity + ", "
 				+ "finalPrice=" + finalPrice + ", "
-				+ "totalPrice=" + totalPrice + ", "
-				+ "calculationType=" + calculationType
 				+ "]";
 	}
 }

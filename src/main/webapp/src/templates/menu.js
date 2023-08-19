@@ -13,6 +13,11 @@ function Sidebar() {
                     icon: "bi bi-grid",
                     text: "Dashboard"
                 }),
+                SidebarItem({
+                    href: "order.html",
+                    icon: "bi bi-grid",
+                    text: "Order Management"
+                }),
                 SidebarItemCollapse({
                     icon: "bi bi-menu-button-wide",
                     text: "Components",

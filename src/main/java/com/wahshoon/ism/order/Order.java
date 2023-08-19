@@ -1,4 +1,4 @@
-package com.wahshoon.ism.model;
+package com.wahshoon.ism.order;
 
 import java.util.Date;
 import java.util.List;

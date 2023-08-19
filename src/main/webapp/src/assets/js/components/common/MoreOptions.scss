@@ -1,0 +1,26 @@
+.dropdown-menu {
+
+  .dropdown-item {
+    .dropdown-item-content {
+      i {
+        display: none;
+      }
+    }
+  }
+
+  &.dropdown-menu-indicator-start {
+    .dropdown-item {
+
+      .dropdown-item-content {
+        display: flex;
+        align-items: center;
+        width: 100%;
+
+        i {
+          display: block;
+          width: 26px;
+        }
+      }
+    }
+  }
+}
