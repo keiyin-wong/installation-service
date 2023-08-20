@@ -1,18 +1,18 @@
 import PageTitle, {BreadcrumbItem} from "../../assets/js/components/common/PageTitle";
 import Tabs, {TabItem, TabPane} from "../../assets/js/components/common/Tabs";
 import {nanoid} from "nanoid";
-import {getOrderApi} from "../../assets/js/containers/order/order-fetchers";
-import {convertNumberToCurrency} from "../../assets/js/utils/common-utils";
+import EditOrderDetailTable from "./components/EditOrderDetailTable";
+import {pageContext} from "../../assets/js/utils/common-utils";
 
 PageTitle({
     title: "Edit Order",
     breadcrumb: [
         BreadcrumbItem({
-            title: "Edit Order",
-            href: "#"
+            title: "Order",
+            href: `${pageContext}/order.html`
         }),
         BreadcrumbItem({
-            title: "Order",
+            title: "Edit Order",
             active: true
         })
     ]
@@ -63,67 +63,32 @@ function EditOrderDetailPane(props) {
 
     return (
         $("<div>").append(
+            $("<h5>").addClass("card-title").text("Order"),
+            $("<form>").append(
+                $("<div>").addClass("row mb-3").append(
+                    $("<label>").addClass("col-sm-2 col-form-label").text("Order ID"),
+                    $("<div>").addClass("col-sm-10").append(
+                        $("<input>").addClass("form-control-plaintext").attr({
+                            "type": "text",
+                            "value": orderId,
+                        })
+                    )
+                )
+            ),
             $("<h5>").addClass("card-title").text("Order Details"),
-            OrderDetailTable({
+            // Add Order Button
+            $("<div>").addClass("d-flex justify-content-end mb-3").append(
+                $("<button>").addClass("btn btn-primary").attr({
+                    "type": "button",
+                }).append(
+                    $("<i>").addClass("bi bi-plus"),
+                    $("<span>").addClass("ms-1").text("New")
+                )
+            ),
+            EditOrderDetailTable({
                 orderId: orderId
             })
         )
     )
 }
 
-/**
- *
- * Order Detail Table
- *
- * @param props
- * @param {string|number} props.orderId - id of the order
- *
- * @returns {*|jQuery}
- * @constructor
- */
-function OrderDetailTable(props) {
-    let orderId = props.orderId;
-
-    // ====================================================
-
-    let $table = $("<table>")
-    let $tbody = $("<tbody>")
-
-    getOrderApi(orderId).done(function (data) {
-        data.orderDetails.forEach(function (orderDetail, index) {
-            $tbody.append(
-                $("<tr>").append(
-                    $("<td>").text(index + 1),
-                    $("<td>").text(orderDetail.serviceId),
-                    $("<td>").text(orderDetail.description),
-                    $("<td>").text(orderDetail.width),
-                    $("<td>").text(orderDetail.height),
-                    $("<td>").text(orderDetail.ft),
-                    $("<td>").text(orderDetail.quantity),
-                    $("<td>").text(convertNumberToCurrency(orderDetail.finalPrice/100)),
-                    $("<td>").text(orderDetail.totalPrice),
-                )
-            )
-        })
-    })
-
-    return (
-        $table.addClass("table").append(
-            $("<thead>").append(
-                $("<tr>").append(
-                    $("<th>").text("#"),
-                    $("<th>").text("Service"),
-                    $("<th>").text("Description"),
-                    $("<th>").text("Width"),
-                    $("<th>").text("Height"),
-                    $("<th>").text("Ft"),
-                    $("<th>").text("Quantity"),
-                    $("<th>").text("Unit Price"),
-                    $("<th>").text("Total Price"),
-                    $("<th>")
-                )
-            ),
-            $tbody
-        )
-    )
-}

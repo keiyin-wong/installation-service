@@ -23,5 +23,14 @@ public interface OrderMapper {
 
     // ============OrderDetail================
 
-    List<OrderDetail> getOrderDetailListByOrderId(String orderId);
+    List<OrderDetailVO> getOrderDetailListByOrderId(String orderId);
+
+    Integer updateOrderDetail(
+            @Param("orderId")
+            String orderId,
+            @Param("lineNumber")
+            Integer lineNumber,
+            @Param("orderDetail")
+            OrderDetail orderDetail
+    );
 }

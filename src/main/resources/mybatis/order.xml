@@ -28,15 +28,20 @@
         <result property="comments" column="order_comments"/>
     </resultMap>
 
-    <resultMap id="OrderDetailResultMap" type="com.wahshoon.ism.order.OrderDetail">
+    <resultMap id="OrderDetailVOResultMap" type="com.wahshoon.ism.order.OrderDetailVO">
         <result property="orderId" column="od_order_id" />
         <result property="lineNumber" column="od_line_number" />
-        <result property="serviceId" column="od_service_id" />
         <result property="description" column="od_description" />
         <result property="width" column="od_width" />
         <result property="height" column="od_height" />
         <result property="quantity" column="od_quantity" />
         <result property="finalPrice" column="od_final_price" />
+        <result property="updatedTime" column="updated_time" />
+        <result property="updatedBy" column="updated_by" />
+        <association
+            property="service"
+            resultMap="com.wahshoon.ism.service.ServiceMapper.ServiceResultMap"
+        />
     </resultMap>
 
     <select id="getOrder" resultMap="orderResultMap">
@@ -51,17 +56,6 @@
         ${alias}date as order_date,
         ${alias}remarks as order_remarks,
         ${alias}comments as order_comments
-    </sql>
-
-    <sql id="orderDetailColumns">
-        ${alias}order_id as od_order_id,
-        ${alias}line_number as od_line_number,
-        ${alias}service_id as od_service_id,
-        ${alias}description as od_description,
-        ${alias}width as od_width,
-        ${alias}height as od_height,
-        ${alias}quantity as od_quantity,
-        ${alias}final_price as od_final_price
     </sql>
 
     <select id="getOrderVOListForDatatable" resultMap="OrderVOResultMap">
@@ -124,19 +118,57 @@
     </select>
 
     <!-- Order Detail -->
-    <select id="getOrderDetailListByOrderId" resultMap="OrderDetailResultMap">
+
+    <sql id="orderDetailVOColumns">
+        ${orderDetailAlias}order_id as od_order_id,
+        ${orderDetailAlias}line_number as od_line_number,
+        ${orderDetailAlias}service_id as od_service_id,
+        ${orderDetailAlias}description as od_description,
+        ${orderDetailAlias}width as od_width,
+        ${orderDetailAlias}height as od_height,
+        ${orderDetailAlias}quantity as od_quantity,
+        ${orderDetailAlias}final_price as od_final_price,
+        ${orderDetailAlias}updated_time as updated_time,
+        ${orderDetailAlias}updated_by as updated_by,
+        <include refid="com.wahshoon.ism.service.ServiceMapper.serviceColumns">
+            <property name="alias" value="${serviceAlias}"/>
+        </include>
+    </sql>
+
+    <select id="getOrderDetailListByOrderId" resultMap="OrderDetailVOResultMap">
         SELECT
-        <include refid="orderDetailColumns">
-            <property name="alias" value=""/>
+        <include refid="orderDetailVOColumns">
+            <property name="orderDetailAlias" value="od."/>
+            <property name="serviceAlias" value="s."/>
         </include>
         <![CDATA[
         FROM
-            `order_detail`
+            `order_detail` AS od
+        LEFT JOIN
+            service AS s ON od.service_id = s.id
         WHERE
             order_id = #{orderId}
         ORDER BY
             line_number
         ]]>
     </select>
+
+    <update id="updateOrderDetail">
+        UPDATE
+            `order_detail`
+        SET
+            service_id = #{orderDetail.serviceId},
+            description = #{orderDetail.description},
+            width = #{orderDetail.width},
+            height = #{orderDetail.height},
+            quantity = #{orderDetail.quantity},
+            final_price = #{orderDetail.finalPrice},
+            updated_time = NOW(),
+            updated_by = #{orderDetail.updatedBy}
+        WHERE
+            order_id = #{orderId}
+        AND
+            line_number = #{lineNumber}
+    </update>
 
 </mapper>

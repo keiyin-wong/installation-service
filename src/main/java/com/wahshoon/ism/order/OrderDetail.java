@@ -1,71 +1,98 @@
 package com.wahshoon.ism.order;
 
 
-public class OrderDetail {
-	String orderId;
-	int lineNumber;
-	int serviceId;
-	String serviceName;
-	String description;
-	double width;
-	double height;
-	int quantity;
-	int finalPrice;
+import java.util.Date;
 
-	
+public class OrderDetail {
+	private String orderId;
+	private Integer lineNumber;
+	private Integer serviceId;
+	private String description;
+	private Double width;
+	private Double height;
+	private Integer quantity;
+	private Integer finalPrice;
+	private Date updatedDate;
+	private String updatedBy;
+
 	public String getOrderId() {
 		return orderId;
 	}
+
 	public void setOrderId(String orderId) {
 		this.orderId = orderId;
 	}
-	public int getLineNumber() {
+
+	public Integer getLineNumber() {
 		return lineNumber;
 	}
-	public void setLineNumber(int productLineNumber) {
-		this.lineNumber = productLineNumber;
+
+	public void setLineNumber(Integer lineNumber) {
+		this.lineNumber = lineNumber;
 	}
-	public int getServiceId() {
+
+	public Integer getServiceId() {
 		return serviceId;
 	}
-	public void setServiceId(int serviceId) {
+
+	public void setServiceId(Integer serviceId) {
 		this.serviceId = serviceId;
 	}
-	public double getWidth() {
-		return width;
-	}
-	public void setWidth(double width) {
-		this.width = width;
-	}
-	public double getHeight() {
-		return height;
-	}
-	public void setHeight(double height) {
-		this.height = height;
-	}
-	public int getQuantity() {
-		return quantity;
-	}
-	public void setQuantity(int quantity) {
-		this.quantity = quantity;
-	}
-	public int getFinalPrice() {
-		return finalPrice;
-	}
-	public void setFinalPrice(int finalPrice) {
-		this.finalPrice = finalPrice;
-	}
-	public String getServiceName() {
-		return serviceName;
-	}
-	public void setServiceName(String serviceName) {
-		this.serviceName = serviceName;
-	}
+
 	public String getDescription() {
 		return description;
 	}
+
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public Double getWidth() {
+		return width;
+	}
+
+	public void setWidth(Double width) {
+		this.width = width;
+	}
+
+	public Double getHeight() {
+		return height;
+	}
+
+	public void setHeight(Double height) {
+		this.height = height;
+	}
+
+	public Integer getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(Integer quantity) {
+		this.quantity = quantity;
+	}
+
+	public Integer getFinalPrice() {
+		return finalPrice;
+	}
+
+	public void setFinalPrice(Integer finalPrice) {
+		this.finalPrice = finalPrice;
+	}
+
+	public Date getUpdatedDate() {
+		return updatedDate;
+	}
+
+	public void setUpdatedDate(Date updatedDate) {
+		this.updatedDate = updatedDate;
+	}
+
+	public String getUpdatedBy() {
+		return updatedBy;
+	}
+
+	public void setUpdatedBy(String updatedBy) {
+		this.updatedBy = updatedBy;
 	}
 
 	@Override
@@ -73,7 +100,6 @@ public class OrderDetail {
 		return "["
 				+ "orderId=" + orderId + ", "
 				+ "lineNumber=" + lineNumber + ", "
-				+ "serviceName=" + serviceName + ", "
 				+ "description=" + description + ", "
 				+ "width=" + width + ", "
 				+ "height=" + height + ", "

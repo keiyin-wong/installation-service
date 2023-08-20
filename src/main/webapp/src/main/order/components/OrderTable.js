@@ -1,7 +1,7 @@
 import {convertNumberToCurrency, pageContext} from "../../../assets/js/utils/common-utils";
 import {convertUnixTimestampToMomentDate} from "../../../assets/js/utils/moment-utils";
 import MoreOptions, {MoreOptionsItemWithIcon} from "../../../assets/js/components/common/MoreOptions";
-import {jqueryPreXhrProcessing} from "../../../assets/js/utils/jquery-utils";
+import {jqueryDatatablePreXhrProcessing} from "../../../assets/js/utils/jquery-utils";
 
 export default function OrderTable() {
 
@@ -11,7 +11,7 @@ export default function OrderTable() {
 
     $table.ready(function () {
         $table.on('preXhr.dt', function ( e, settings, data ) {
-            jqueryPreXhrProcessing(e, 6)
+            jqueryDatatablePreXhrProcessing(e, 6)
         }).DataTable({
             serverSide: true,
             ajax: {
@@ -26,6 +26,7 @@ export default function OrderTable() {
                 }
             },
             searching: false,
+            scrollX: true,
             processing: false,
             pageLength: 10,
             ordering: true,

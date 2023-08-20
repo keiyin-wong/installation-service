@@ -20,7 +20,7 @@ public class OrderService {
         OrderVO orderVO = orderMapper.getOrderVOWithoutTotalById(orderId);
 
         if (orderVO != null) {
-            List<OrderDetail> orderDetailList = orderMapper.getOrderDetailListByOrderId(orderId);
+            List<OrderDetailVO> orderDetailList = orderMapper.getOrderDetailListByOrderId(orderId);
             orderVO.setOrderDetails(orderDetailList);
         }
 
@@ -37,5 +37,11 @@ public class OrderService {
 
     public Integer getOrderCountForDatatable() {
         return orderMapper.getOrderCountForDatatable();
+    }
+
+    // Order Detail
+
+    public Integer updateOrderDetail(String orderId, Integer lineNumber, OrderDetail orderDetail) {
+        return orderMapper.updateOrderDetail(orderId, lineNumber, orderDetail);
     }
 }

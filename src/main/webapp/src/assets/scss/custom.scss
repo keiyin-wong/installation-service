@@ -1,0 +1,32 @@
+.modal-title {
+  flex-grow: 1;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.5;
+  margin-bottom: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+label.required:after {
+  content: " *";
+  color: red;
+}
+
+.card-title {
+  font-weight: 600;
+}
+
+#loader {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  background: rgba(0,0,0,0.75) url("../files/img/loading.gif") no-repeat center center;
+  z-index: 10000;
+  background-size: 50px 50px
+}

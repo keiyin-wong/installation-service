@@ -5,6 +5,8 @@ import com.wahshoon.ism.datatable.JsonDatatableQueryResponse;
 import com.wahshoon.ism.datatable.PaginationCriteria;
 import com.wahshoon.ism.error.CustomErrorExceptionBuilder;
 import com.wahshoon.ism.error.CustomErrorHandling;
+import com.wahshoon.ism.model.WriteResponse;
+import com.wahshoon.ism.order.OrderDetail;
 import com.wahshoon.ism.order.OrderService;
 import com.wahshoon.ism.order.OrderVO;
 import com.wahshoon.ism.util.MessageSourceUtil;
@@ -71,6 +73,29 @@ public class OrderController {
         }
         log.info("Successfully retrieved orderVO by id. [orderId={}]", orderId);
         return orderVO;
+    }
+
+    // Order Detail
+    @PostMapping(value = "/{orderIdParam}/line-number/{lineNumberParam}/order-detail/update")
+    public WriteResponse updateOrderDetail(
+            @PathVariable("orderIdParam")
+            String orderId,
+            @PathVariable("lineNumberParam")
+            Integer lineNumber,
+            @ModelAttribute
+            OrderDetail orderDetail
+    ) {
+        log.info("Updating order detail. [orderId={}, lineNumber={}]", orderId, lineNumber);
+        Integer updateCount = orderService.updateOrderDetail(orderId, lineNumber, orderDetail);
+        WriteResponse writeResponse = new WriteResponse();
+        if (updateCount > 0) {
+            log.info("Successfully updated order detail. [orderId={}, lineNumber={}]", orderId, lineNumber);
+            writeResponse.setStatus(true);
+        } else {
+            log.info("Failed to update order detail. [orderId={}, lineNumber={}]", orderId, lineNumber);
+            writeResponse.setStatus(false);
+        }
+        return writeResponse;
     }
 
 }

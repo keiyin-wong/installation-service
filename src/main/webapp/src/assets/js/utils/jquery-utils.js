@@ -28,7 +28,7 @@ export function jqueryDatatableProcessingFunction(e, processing, col) {
  * @param e - event
  * @param col - number of columns
  */
-export function jqueryPreXhrProcessing(e, col) {
+export function jqueryDatatablePreXhrProcessing(e, col) {
     let $table = $(e.currentTarget);
     let $tbody = $table.find("tbody");
     let spinner = $("<tr>").append(
@@ -39,4 +39,32 @@ export function jqueryPreXhrProcessing(e, col) {
         )
     );
     $tbody.empty().append(spinner);
+}
+
+export let jqueryValidateClassOptions = {
+    errorClass: "invalid-feedback",
+    errorElement: "div",
+    highlight: function (input) {
+        $(input).addClass('is-invalid');
+    },
+    unhighlight: function (input) {
+        $(input).removeClass('is-invalid');
+    },
+    errorPlacement: function (error, element) {
+        error.insertAfter(element);
+    },
+}
+
+export let jqueryValidateTooltipOptions = {
+    errorClass: "invalid-tooltip",
+    errorElement: "div",
+    highlight: function (input) {
+        $(input).addClass('is-invalid');
+    },
+    unhighlight: function (input) {
+        $(input).removeClass('is-invalid');
+    },
+    errorPlacement: function (error, element) {
+        error.insertAfter(element);
+    },
 }

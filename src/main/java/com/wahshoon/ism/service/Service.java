@@ -1,4 +1,4 @@
-package com.wahshoon.ism.model;
+package com.wahshoon.ism.service;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;

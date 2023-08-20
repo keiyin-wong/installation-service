@@ -10,7 +10,7 @@ public class OrderVO {
     private String remarks;
     private String comments;
 
-    private List<OrderDetail> orderDetails;
+    private List<OrderDetailVO> orderDetails;
 
     public String getId() {
         return id;
@@ -52,11 +52,11 @@ public class OrderVO {
         this.comments = comments;
     }
 
-    public List<OrderDetail> getOrderDetails() {
+    public List<OrderDetailVO> getOrderDetails() {
         return orderDetails;
     }
 
-    public void setOrderDetails(List<OrderDetail> orderDetails) {
+    public void setOrderDetails(List<OrderDetailVO> orderDetails) {
         this.orderDetails = orderDetails;
     }
 }
