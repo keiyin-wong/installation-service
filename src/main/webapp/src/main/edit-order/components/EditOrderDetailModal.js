@@ -1,7 +1,7 @@
 import {getAllServicesApi} from "../../../assets/js/containers/service/service-fetchers";
 import "./EditOrderDetailModal.scss";
 import {
-    calculateFtTypeTotalPriceWithQuantity,
+    calculateTotalPriceWithQuantity,
     calculateTotalPriceWithFT,
     convertNumberToCurrency,
     formatServiceName, hideLoader,
@@ -14,6 +14,10 @@ import {customSomethingWentWrongSwal, customSuccessSwal} from "../../../assets/j
 /**
  *
  * Edit Order Detail Modal
+ * @param {object} [props] - Settings
+ * @param {object} [props.settings] - Settings
+ * @param {boolean} [props.settings.useApi] - Use api to get services list, default is true
+ * @param {array} [props.settings.serviceList] - List of services, default is empty array. This will be used if useApi is false
  * @param {function} [props.update.onSuccess] - On success callback, default is show success swal
  * @param {function} [props.update.onFailure] - On failure callback, default is show something went wrong swal
  * @param {function} [props.update.onComplete] - On complete callback, default is empty function
@@ -24,6 +28,8 @@ import {customSomethingWentWrongSwal, customSuccessSwal} from "../../../assets/j
  * }}
  */
 export default function EditOrderDetailModal(props) {
+    let useApi = props?.settings?.useApi ?? true;
+    let serviceList = props?.settings?.serviceList ?? [];
     let updateOnSuccess = props?.update?.onSuccess ?? function (response) {
     	if(response.status) {
     		customSuccessSwal.fire();
@@ -89,7 +95,11 @@ export default function EditOrderDetailModal(props) {
     })
 
     $serviceSelect.ready(function () {
-        renderSelectServiceOption();
+        if (useApi) {
+            renderSelectServiceOptionByApi();
+        } else {
+            renderSelectServiceOptionByServices(serviceList);
+        }
     });
 
     $serviceSelect.on("select2:select", function (e) {
@@ -267,7 +277,7 @@ export default function EditOrderDetailModal(props) {
                 break;
             case 1: // Quantity
                 if (quantity && unitPrice) {
-                    totalPrice = calculateFtTypeTotalPriceWithQuantity(quantity, unitPrice);
+                    totalPrice = calculateTotalPriceWithQuantity(quantity, unitPrice);
                 }
                 break;
             case 2: // ping feng
@@ -289,33 +299,37 @@ export default function EditOrderDetailModal(props) {
         $unitPriceInput.val(null);
     }
 
-    function renderSelectServiceOption() {
+    function renderSelectServiceOptionByApi() {
         getAllServicesApi().then(function (services) {
-            servicesList = services;
-            let data = services.map(function (service) {
-                return {
-                    id: service.id,
-                    text: formatServiceName(service.descriptionEnglish, service.descriptionChinese),
-                    calculationType: service.calculationType,
-                    price: service.price,
-                }
-            })
-            $serviceSelect.select2({
-                placeholder: "Select a service",
-                dropdownParent: $modal,
-                data: data,
-                width: "100%",
-                closeOnSelect: true,
-                allowClear: true,
-                templateResult: function (data) {
-                    return $("<div>").addClass("d-flex justify-content-between").append(
-                        $("<div>").text(data.text),
-                        $("<div>").text(convertNumberToCurrency(data.price/100))
-                    )
-                }
-            })
+            renderSelectServiceOptionByServices(services);
         }).always(function () {
             $serviceSelect.val(null).trigger("change");
+        })
+    }
+
+    function renderSelectServiceOptionByServices(services) {
+        servicesList = services;
+        let data = services.map(function (service) {
+            return {
+                id: service.id,
+                text: formatServiceName(service.descriptionEnglish, service.descriptionChinese),
+                calculationType: service.calculationType,
+                price: service.price,
+            }
+        })
+        $serviceSelect.select2({
+            placeholder: "Select a service",
+            dropdownParent: $modal,
+            data: data,
+            width: "100%",
+            closeOnSelect: true,
+            allowClear: true,
+            templateResult: function (data) {
+                return $("<div>").addClass("d-flex justify-content-between").append(
+                    $("<div>").text(data.text),
+                    $("<div>").text(convertNumberToCurrency(data.price/100))
+                )
+            }
         })
     }
 

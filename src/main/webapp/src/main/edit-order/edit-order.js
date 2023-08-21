@@ -22,6 +22,7 @@ App().appendTo("#rootContent");
 
 function App() {
     let editOrderDetailPaneId = `id-${nanoid()}`;
+    let editOrderPaneId = `id-${nanoid()}`;
 
     return (
         $("<section>").append(
@@ -38,6 +39,7 @@ function App() {
                                     }),
                                     TabItem({
                                         text: "Edit Order",
+                                        targetId: editOrderPaneId
                                     })
                                 ],
                                 tabPanes: [
@@ -46,6 +48,12 @@ function App() {
                                         id: editOrderDetailPaneId,
                                         paneContent: EditOrderDetailPane({
                                             orderId: orderId
+                                        })
+                                    }),
+                                    TabPane({
+                                        id: editOrderPaneId,
+                                        paneContent: EditOrderPane({
+
                                         })
                                     })
                                 ]
@@ -88,6 +96,75 @@ function EditOrderDetailPane(props) {
             EditOrderDetailTable({
                 orderId: orderId
             })
+        )
+    )
+}
+
+function EditOrderPane(props) {
+    let orderId = props.orderId;
+
+    // ========================================
+
+    let $dateInput = $("<input>").prop({
+        "readonly": true,
+    })
+
+    $dateInput.ready(function () {
+        $dateInput.daterangepicker({
+            singleDatePicker: true,
+            showDropdowns: true,
+            autoApply: true,
+            locale: {
+                format: "DD-MM-YYYY",
+                cancelLabel: 'Clear'
+            }
+        })
+    })
+
+    return (
+        $("<div>").append(
+            $("<h5>").addClass("card-title").text("Order"),
+            $("<form>").append(
+                $("<div>").addClass("row mb-3").append(
+                    $("<label>").addClass("col-sm-2 col-form-label").text("Order ID"),
+                    $("<div>").addClass("col-sm-10").append(
+                        $("<input>").addClass("form-control").attr({
+                            "type": "text",
+                        })
+                    )
+                ),
+                $("<div>").addClass("row mb-3").append(
+                    $("<label>").addClass("col-sm-2 col-form-label").text("Order Date"),
+                    $("<div>").addClass("col-sm-10").append(
+                        $dateInput.addClass("form-control")
+                    )
+                ),
+                $("<div>").addClass("row mb-3").append(
+                    $("<label>").addClass("col-sm-2 col-form-label").text("Customer Notes"),
+                    $("<div>").addClass("col-sm-10").append(
+                        $("<textarea>").addClass("form-control").attr({
+                            "rows": "3"
+                        })
+                    )
+                ),
+                $("<div>").addClass("row mb-3").append(
+                    $("<label>").addClass("col-sm-2 col-form-label").text("Comments"),
+                    $("<div>").addClass("col-sm-10").append(
+                        $("<textarea>").addClass("form-control").attr({
+                            "rows": "3"
+                        })
+                    )
+                ),
+                // Save Button
+                $("<div>").addClass("d-flex justify-content-end mb-3").append(
+                    $("<button>").addClass("btn btn-primary").attr({
+                        "type": "button",
+                    }).append(
+                        $("<i>").addClass("bi bi-save"),
+                        $("<span>").addClass("ms-1").text("Save Changes")
+                    )
+                )
+            )
         )
     )
 }

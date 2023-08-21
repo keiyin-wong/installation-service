@@ -1,9 +1,9 @@
 import SpinnerBs from "../../../assets/js/components/common/SpinnerBs";
 import {
     calculateFt,
-    calculateFtTypeTotalPriceWithQuantity,
+    calculateTotalPriceWithQuantity,
     calculateTotalPriceWithFT,
-    convertNumberToCurrency, formatServiceName
+    convertNumberToCurrency, formatServiceName, calculateTotalPriceWithPingFeng
 } from "../../../assets/js/utils/common-utils";
 import MoreOptions, {MoreOptionsItemWithIcon} from "../../../assets/js/components/common/MoreOptions";
 import {getOrderApi} from "../../../assets/js/containers/order/order-fetchers";
@@ -28,6 +28,10 @@ export default function EditOrderDetailTable(props) {
     let $tbody = $("<tbody>")
     let $tfoot = $("<tfoot>")
     let {$modal: $editOrderDetailModal, setForm: setEditOrderDetailModalForm} = EditOrderDetailModal({
+        settings: {
+            useApi: false,
+            serviceList: serviceListFromServer
+        },
         update: {
             onSuccess: function (res) {
                 if (res.status) {
@@ -131,11 +135,16 @@ export default function EditOrderDetailTable(props) {
                                     return convertNumberToCurrency(totalPrice);
                                 }
                                 case 1: // Quantity
-                                    let totalPrice = calculateFtTypeTotalPriceWithQuantity(orderDetail.quantity, orderDetail.finalPrice/100);
-                                    subTotal = subTotal + totalPrice;
-                                    return convertNumberToCurrency(totalPrice);
+                                    let totalPrice1 = calculateTotalPriceWithQuantity(orderDetail.quantity, orderDetail.finalPrice/100);
+                                    subTotal = subTotal + totalPrice1;
+                                    return convertNumberToCurrency(totalPrice1);
                                 case 2: // ping feng
-                                    return "-";
+                                    let totalPrice2 = calculateTotalPriceWithPingFeng(orderDetail.width,
+                                        orderDetail.height,
+                                        orderDetail.finalPrice/100
+                                    );
+                                    subTotal = subTotal + totalPrice2;
+                                    return convertNumberToCurrency(totalPrice2);
                                 default:
                                     return "???";
                             }

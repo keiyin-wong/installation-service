@@ -19,9 +19,23 @@ export function calculateTotalPriceWithFT(width, unitPrice) {
     return Number((ft * unitPrice).toFixed(2));
 }
 
-export function calculateFtTypeTotalPriceWithQuantity(quantity, unitPrice) {
+export function calculateTotalPriceWithQuantity(quantity, unitPrice) {
     return Number((quantity * unitPrice).toFixed(2));
 }
+
+/**
+ *
+ * @param {number} width - the width of the order detail
+ * @param {number} height - the height of the order detail
+ * @param {number} unitPrice - the unit price of the order detail
+ * @returns {number} - the total price of the order detail, truncated to 2 decimal places. Not rounded.
+ */
+export function calculateTotalPriceWithPingFeng(width, height, unitPrice) {
+    let ftWidth = calculateFt(width);
+    let ftHeight = calculateFt(height);
+    return Number(Math.floor(ftWidth * ftHeight * unitPrice * 100)/100);
+}
+
 
 export function formatServiceName(descriptionEnglish, descriptionChinese) {
     if (!descriptionEnglish) {

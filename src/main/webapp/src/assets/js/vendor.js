@@ -13,6 +13,9 @@ import "select2/dist/css/select2.min.css";
 
 import "jquery-validation/dist/jquery.validate.min";
 
+import "daterangepicker/daterangepicker";
+import "daterangepicker/daterangepicker.css";
+
 // Custom
 import "../scss/global.css";
 import "../scss/custom.scss";
