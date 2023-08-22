@@ -1,10 +1,15 @@
 package com.wahshoon.ism.order;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.util.Date;
 import java.util.List;
 
 public class OrderVO {
     private String id;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+//    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date date;
     private Integer total;
     private String remarks;

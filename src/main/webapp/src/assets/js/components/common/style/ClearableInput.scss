@@ -1,0 +1,29 @@
+/* Clearable text inputs */
+.clearable {
+  position: relative;
+  display: inline-block;
+
+  input[type=text] {
+    padding-right: 24px;
+    width: 100%;
+    box-sizing: border-box;
+
+    &::-ms-clear {
+      display: none;
+    }
+  }
+
+  .clearable-icon {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    position: absolute;
+    right: 0;
+    top: 0;
+    padding: 0 8px;
+    font-style: normal;
+    font-size: 1.2em;
+    user-select: none;
+    cursor: pointer;
+  }
+}

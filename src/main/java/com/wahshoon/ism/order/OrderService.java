@@ -39,7 +39,13 @@ public class OrderService {
         return orderMapper.getOrderCountForDatatable();
     }
 
+    public Integer updateOrder(String orderId, Order order) {
+        return orderMapper.updateOrder(orderId, order);
+    }
+
+    // ==============================================
     // Order Detail
+    // ==============================================
 
     public Integer updateOrderDetail(String orderId, Integer lineNumber, OrderDetail orderDetail) {
         return orderMapper.updateOrderDetail(orderId, lineNumber, orderDetail);

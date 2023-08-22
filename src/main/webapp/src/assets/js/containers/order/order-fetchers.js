@@ -1,12 +1,73 @@
 import {pageContext} from "../../utils/common-utils";
+import moment from "moment";
 
-export function getOrderApi(id) {
+export function getOrderVOApi(id) {
     return $.ajax({
         url: `${pageContext}/orders/${id}/vo`,
         type: "GET",
         dataType: "json",
     })
 }
+
+export function getOrderApi(id) {
+    return $.ajax({
+        url: `${pageContext}/orders/${id}`,
+        type: "GET",
+        dataType: "json",
+    })
+}
+
+/**
+ *
+ * @param {string|number} id - the order id
+ * @param {object} order
+ * @param {string} order.date - the order date in format DD-MM-YYYY
+ * @param {string} order.remarks - the remarks, customer notes
+ * @param {string} order.comments - the comments
+ *
+ * @returns {*|jQuery}
+ */
+export function updateOrderApi(id, order) {
+    let formattedDate = moment(order.date, "DD-MM-YYYY").format("YYYY-MM-DD");
+
+    return $.ajax({
+        url: `${pageContext}/orders/${id}/update`,
+        type: "POST",
+        dataType: "json",
+        data: {
+            date: formattedDate,
+            remarks: order.remarks,
+            comments: order.comments,
+        }
+    })
+}
+
+/**
+ * Create a new order
+ *
+ * @param {object} order
+ * @param {string} order.date - the order date in format DD-MM-YYYY
+ * @param {string} order.remarks - the remarks, customer notes
+ * @param {string} order.comments - the comments
+ *
+ * @returns {*|jQuery}
+ */
+export function createOrderApi(order) {
+    let formattedDate = moment(order.date, "DD-MM-YYYY").format("YYYY-MM-DD");
+
+    return $.ajax({
+        url: `${pageContext}/orders/create`,
+        type: "POST",
+        dataType: "json",
+        data: {
+            date: formattedDate,
+            remarks: order.remarks,
+            comments: order.comments,
+        }
+    })
+}
+
+
 
 /**
  *

@@ -1,4 +1,4 @@
-import "./MoreOptions.scss"
+import "./style/MoreOptions.scss"
 
 /**
  *

@@ -1,0 +1,29 @@
+.sheet {
+  border-color: #a7a9bc;
+  border-style: solid;
+  border-width: 0 0 1px 0;
+  color: #012970;
+  display: flex;
+  flex-wrap: nowrap;
+  width: 100%;
+  font-size: .875rem;
+  font-weight: 600;
+  line-height: 1.2;
+  margin-bottom: 1rem;
+  padding-bottom: .5rem;
+  padding-top: .5rem;
+  position: relative;
+  text-transform: uppercase;
+  word-wrap: break-word;
+
+  .sheet-subtitle {
+    flex-grow: 1;
+    flex-shrink: 1;
+    word-wrap: break-word;
+    margin-top: auto;
+  }
+
+  .sheet-button {
+    text-transform: none;
+  }
+}

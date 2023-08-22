@@ -4,13 +4,10 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.wahshoon.ism.order.OrderMapper">
     <resultMap id="orderResultMap" type="com.wahshoon.ism.order.Order">
-        <result property="id" column="id" javaType="String"/>
-        <result property="date" column="date" javaType="Date"/>
-        <result property="remarks" column="remarks" javaType="String"/>
-        <result property="comments" column="comments" javaType="String"/>
-    </resultMap>
-    <resultMap id="orderAndTotalResultMap" type="com.wahshoon.ism.order.Order" extends="orderResultMap">
-        <result property="total" column="total_price" javaType="Integer"/>
+        <result property="id" column="id"/>
+        <result property="date" column="date"/>
+        <result property="remarks" column="remarks"/>
+        <result property="comments" column="comments"/>
     </resultMap>
 
     <resultMap id="OrderVOResultMap" type="com.wahshoon.ism.order.OrderVO">
@@ -117,7 +114,21 @@
             id = #{orderId}
     </select>
 
+    <update id="updateOrder">
+        UPDATE
+            `order`
+        SET
+            date = #{order.date},
+            remarks = #{order.remarks},
+            comments = #{order.comments}
+        WHERE
+            id = #{id}
+    </update>
+
+
+    <!-- ================================= -->
     <!-- Order Detail -->
+    <!-- ================================= -->
 
     <sql id="orderDetailVOColumns">
         ${orderDetailAlias}order_id as od_order_id,
@@ -154,6 +165,7 @@
     </select>
 
     <update id="updateOrderDetail">
+        <![CDATA[
         UPDATE
             `order_detail`
         SET
@@ -169,6 +181,9 @@
             order_id = #{orderId}
         AND
             line_number = #{lineNumber}
+        ]]>
     </update>
+
+    <!-- =========End of Order Detail ========= -->
 
 </mapper>

@@ -6,7 +6,7 @@ import {
     convertNumberToCurrency, formatServiceName, calculateTotalPriceWithPingFeng
 } from "../../../assets/js/utils/common-utils";
 import MoreOptions, {MoreOptionsItemWithIcon} from "../../../assets/js/components/common/MoreOptions";
-import {getOrderApi} from "../../../assets/js/containers/order/order-fetchers";
+import {getOrderVOApi} from "../../../assets/js/containers/order/order-fetchers";
 import EditOrderDetailModal from "./EditOrderDetailModal";
 import {customSomethingWentWrongSwal, customSuccessSwal} from "../../../assets/js/utils/sweetalert-utils";
 
@@ -62,7 +62,7 @@ export default function EditOrderDetailTable(props) {
                 )
             )
         );
-        getOrderApi(orderId).done(function (data) {
+        getOrderVOApi(orderId).done(function (data) {
             let subTotal = 0;
             $tbody.empty();
             data.orderDetails.forEach(function (orderDetail, index) {

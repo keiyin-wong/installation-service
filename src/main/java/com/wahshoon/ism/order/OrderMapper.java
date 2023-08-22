@@ -21,6 +21,13 @@ public interface OrderMapper {
 
     Integer getOrderCountForDatatable();
 
+    Integer updateOrder(
+            @Param("id")
+            String orderId,
+            @Param("order")
+            Order order
+    );
+
     // ============OrderDetail================
 
     List<OrderDetailVO> getOrderDetailListByOrderId(String orderId);

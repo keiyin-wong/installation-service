@@ -54,6 +54,26 @@ http://www.springframework.org/schema/mvc/spring-mvc.xsd">
         </property>
     </bean>
 
+    <bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+        <property name="registerDefaultFormatters" value="false" />
+        <property name="formatters">
+            <set>
+                <bean class="org.springframework.format.number.NumberFormatAnnotationFormatterFactory" />
+            </set>
+        </property>
+        <property name="formatterRegistrars">
+            <set>
+                <bean class="org.springframework.format.datetime.standard.DateTimeFormatterRegistrar">
+                    <property name="dateFormatter">
+                        <bean class="org.springframework.format.datetime.standard.DateTimeFormatterFactoryBean">
+                            <property name="pattern" value="yyyy-MM-dd"/>
+                        </bean>
+                    </property>
+                </bean>
+            </set>
+        </property>
+    </bean>
+
     <import resource="classpath:spring/datasource.xml" />
 
 </beans>

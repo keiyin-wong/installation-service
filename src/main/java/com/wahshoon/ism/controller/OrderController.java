@@ -6,6 +6,7 @@ import com.wahshoon.ism.datatable.PaginationCriteria;
 import com.wahshoon.ism.error.CustomErrorExceptionBuilder;
 import com.wahshoon.ism.error.CustomErrorHandling;
 import com.wahshoon.ism.model.WriteResponse;
+import com.wahshoon.ism.order.Order;
 import com.wahshoon.ism.order.OrderDetail;
 import com.wahshoon.ism.order.OrderService;
 import com.wahshoon.ism.order.OrderVO;
@@ -75,6 +76,49 @@ public class OrderController {
         return orderVO;
     }
 
+    @GetMapping(value = "/{orderId}")
+    public Order getOrderById(
+            @PathVariable
+            @Digits(integer = 10, fraction = 0, message = "orderId must be a number")
+            String orderId
+    ) {
+        log.info("Getting order by id. [orderId={}]", orderId);
+        Order order = orderService.getOrder(orderId);
+        if (order == null) {
+            throw new CustomErrorExceptionBuilder(HttpStatus.NOT_FOUND)
+                    .withMessage(messageSourceUtil.getMessage("controller.order.vo.error.notFound.message"))
+                    .withDetail(messageSourceUtil.getMessageWithArgs(
+                            "controller.order.vo.error.notFound.detail",
+                            orderId
+                    ))
+                    .build();
+        }
+        log.info("Successfully retrieved order by id. [orderId={}]", orderId);
+        return order;
+    }
+
+    @PostMapping(value = "/{orderId}/update")
+    public WriteResponse updateOrderById(
+            @PathVariable("orderId")
+            String orderId,
+            @ModelAttribute
+            Order order
+    ) {
+        log.info("Updating order. [orderId={}]", orderId);
+        Integer updateCount = orderService.updateOrder(orderId, order);
+        WriteResponse writeResponse = new WriteResponse();
+        if (updateCount > 0) {
+            log.info("Successfully updated order. [orderId={}]", orderId);
+            writeResponse.setStatus(true);
+        } else {
+            log.info("Failed to update order. [orderId={}]", orderId);
+            writeResponse.setStatus(false);
+        }
+        return writeResponse;
+    }
+
+
+
     // Order Detail
     @PostMapping(value = "/{orderIdParam}/line-number/{lineNumberParam}/order-detail/update")
     public WriteResponse updateOrderDetail(
@@ -97,5 +141,4 @@ public class OrderController {
         }
         return writeResponse;
     }
-
 }
