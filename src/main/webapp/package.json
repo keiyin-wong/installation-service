@@ -11,7 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@keiyin-wong/packtool-cli": "^1.0.0",
+    "@keiyin-wong/packtool-cli": "^2.0.2",
     "bootstrap": "^5.3.1",
     "bootstrap-icons": "^1.10.5",
     "datatables.net-bs5": "^1.13.6",
@@ -21,6 +21,7 @@
     "jquery-validation": "^1.19.5",
     "moment": "^2.29.4",
     "nanoid": "^4.0.2",
+    "redux": "^4.2.1",
     "select2": "^4.1.0-rc.0",
     "sweetalert2": "^11.7.27"
   }

@@ -3,22 +3,22 @@
         "-//Apache Software Foundation//DTD Tiles Configuration 2.0//EN"
         "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
 <tiles-definitions>
-    <definition name="mainTemplate" template="/dist/templates/main.jsp">
+    <definition name="mainTemplate" template="/dist/pages/templates/main.jsp">
         <put-attribute name="title" value="Installation Service Management System" type="string" />
-        <put-attribute name="header" value="/dist/templates/header.jsp" />
-        <put-attribute name="footer" value="/dist/templates/footer.jsp" />
-        <put-attribute name="menu" value="/dist/templates/menu.jsp" />
-        <put-attribute name="body" value="/dist/templates/blank.jsp" />
+        <put-attribute name="header" value="/dist/pages/templates/header.jsp" />
+        <put-attribute name="footer" value="/dist/pages/templates/footer.jsp" />
+        <put-attribute name="menu" value="/dist/pages/templates/menu.jsp" />
+        <put-attribute name="body" value="/dist/pages/templates/blank.jsp" />
     </definition>
 
     <definition name="order" extends="mainTemplate">
         <put-attribute name="title" value="Order Page" type="string" />
-        <put-attribute name="body" value="/dist/main/order/order.jsp" />
+        <put-attribute name="body" value="/dist/pages/order/order.jsp" />
     </definition>
 
     <definition name="edit-order" extends="mainTemplate">
         <put-attribute name="title" value="Order Detail Page" type="string" />
-        <put-attribute name="body" value="/dist/main/edit-order/edit-order.jsp" />
+        <put-attribute name="body" value="/dist/pages/order/edit-order/edit-order.jsp" />
     </definition>
 
 </tiles-definitions>

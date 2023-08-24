@@ -15,16 +15,16 @@ export default function PageTitle(props) {
 
     // ========================================================================
 
-    return (
-        $("<div>").addClass("pagetitle").append(
-            $("<h1>").text(title),
-            $("<nav>").append(
-                $("<ol>").addClass("breadcrumb").append(
-                    breadcrumb
-                )
+    let $component = $("<div>").addClass("pagetitle").append(
+        $("<h1>").text(title),
+        $("<nav>").append(
+            $("<ol>").addClass("breadcrumb").append(
+                breadcrumb
             )
         )
     )
+
+    return $component;
 }
 
 /**
@@ -46,11 +46,11 @@ export function BreadcrumbItem(props) {
 
     // ========================================================================
 
-    return (
-        $("<li>").addClass(
-            active ? "breadcrumb-item active" : "breadcrumb-item"
-        ).append(
-            active ? title : $("<a>").attr("href", href).text(title)
-        )
+    let $component = $("<li>").addClass(
+        active ? "breadcrumb-item active" : "breadcrumb-item"
+    ).append(
+        active ? title : $("<a>").attr("href", href).text(title)
     )
+
+    return $component;
 }

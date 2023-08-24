@@ -1,4 +1,4 @@
-import {getAllServicesApi} from "../../../assets/js/containers/service/service-fetchers";
+import {getAllServicesApi} from "../../../../apis/service-fetchers";
 import "./EditOrderDetailModal.scss";
 import {
     calculateTotalPriceWithQuantity,
@@ -6,10 +6,10 @@ import {
     convertNumberToCurrency,
     formatServiceName, hideLoader,
     showLoader
-} from "../../../assets/js/utils/common-utils";
-import {updateOrderDetailApi} from "../../../assets/js/containers/order/order-fetchers";
-import {jqueryValidateClassOptions} from "../../../assets/js/utils/jquery-utils";
-import {customSomethingWentWrongSwal, customSuccessSwal} from "../../../assets/js/utils/sweetalert-utils";
+} from "../../../../utils/common-utils";
+import {updateOrderDetailApi} from "../../../../apis/order-fetchers";
+import {jqueryValidateClassOptions} from "../../../../utils/jquery-utils";
+import {customSomethingWentWrongSwal, customSuccessSwal} from "../../../../utils/sweetalert-utils";
 
 /**
  *

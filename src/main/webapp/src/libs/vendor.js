@@ -17,7 +17,9 @@ import "daterangepicker/daterangepicker";
 import "daterangepicker/daterangepicker.css";
 
 // Custom
-import "../scss/global.css";
-import "../scss/custom.scss";
+import "../styles/global.css";
+import "../styles/custom.scss";
 
-import "./init";
+import Jq from "./Jq";
+
+window.Jq = Jq;

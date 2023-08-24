@@ -1,14 +1,14 @@
-import SpinnerBs from "../../../assets/js/components/common/SpinnerBs";
+import SpinnerBs from "../../../../components/common/SpinnerBs";
 import {
     calculateFt,
     calculateTotalPriceWithQuantity,
     calculateTotalPriceWithFT,
     convertNumberToCurrency, formatServiceName, calculateTotalPriceWithPingFeng
-} from "../../../assets/js/utils/common-utils";
-import MoreOptions, {MoreOptionsItemWithIcon} from "../../../assets/js/components/common/MoreOptions";
-import {getOrderVOApi} from "../../../assets/js/containers/order/order-fetchers";
+} from "../../../../utils/common-utils";
+import MoreOptions, {MoreOptionsItemWithIcon} from "../../../../components/common/MoreOptions";
+import {getOrderVOApi} from "../../../../apis/order-fetchers";
 import EditOrderDetailModal from "./EditOrderDetailModal";
-import {customSomethingWentWrongSwal, customSuccessSwal} from "../../../assets/js/utils/sweetalert-utils";
+import {customSomethingWentWrongSwal, customSuccessSwal} from "../../../../utils/sweetalert-utils";
 
 /**
  *

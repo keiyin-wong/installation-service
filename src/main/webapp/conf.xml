@@ -11,7 +11,7 @@
         <cssOutputFolder>assets/css/</cssOutputFolder>
         <includes>
             <include>
-                <path>src/assets/js/vendor.js</path>
+                <path>src/libs/vendor.js</path>
                 <outputPath></outputPath>
             </include>
         </includes>
@@ -23,7 +23,7 @@
     <htmlWebPackPlugin>
         <includes>
             <include>
-                <path>src/templates/main.jsp</path>
+                <path>src/pages/templates/main.jsp</path>
                 <chunks includeSelf="true" inject="head" scriptLoading="blocking">
                     <chunk>vendor</chunk>
                 </chunks>

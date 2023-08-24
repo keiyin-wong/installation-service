@@ -1,7 +1,7 @@
-import {convertNumberToCurrency, pageContext} from "../../../assets/js/utils/common-utils";
-import {convertUnixTimestampToMomentDate} from "../../../assets/js/utils/moment-utils";
-import MoreOptions, {MoreOptionsItemWithIcon} from "../../../assets/js/components/common/MoreOptions";
-import {jqueryDatatablePreXhrProcessing} from "../../../assets/js/utils/jquery-utils";
+import {convertNumberToCurrency, pageContext} from "../../../utils/common-utils";
+import {convertUnixTimestampToMomentDate} from "../../../utils/moment-utils";
+import MoreOptions, {MoreOptionsItemWithIcon} from "../../../components/common/MoreOptions";
+import {jqueryDatatablePreXhrProcessing} from "../../../utils/jquery-utils";
 
 export default function OrderTable() {
 

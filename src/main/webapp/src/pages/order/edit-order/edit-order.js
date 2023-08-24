@@ -1,10 +1,10 @@
-import PageTitle, {BreadcrumbItem} from "../../assets/js/components/common/PageTitle";
-import Tabs, {TabItem, TabPane} from "../../assets/js/components/common/Tabs";
+import PageTitle, {BreadcrumbItem} from "../../../components/common/PageTitle";
+import Tabs, {TabItem, TabPane} from "../../../components/common/Tabs";
 import {nanoid} from "nanoid";
 import EditOrderDetailTable from "./components/EditOrderDetailTable";
-import {pageContext} from "../../assets/js/utils/common-utils";
+import {pageContext} from "../../../utils/common-utils";
 import EditOrderPane from "./components/EditOrderPane";
-import SheetSubtitle from "../../assets/js/components/common/SheetSubtitle";
+import SheetSubtitle from "../../../components/common/SheetSubtitle";
 
 PageTitle({
     title: "Edit Order",

@@ -1,8 +1,8 @@
-import {getOrderApi, getOrderVOApi, updateOrderApi} from "../../../assets/js/containers/order/order-fetchers";
+import {getOrderApi, getOrderVOApi, updateOrderApi} from "../../../../apis/order-fetchers";
 import moment from "moment/moment";
-import {hideLoader, showLoader} from "../../../assets/js/utils/common-utils";
-import {customSomethingWentWrongSwal, customSuccessSwal} from "../../../assets/js/utils/sweetalert-utils";
-import SheetSubtitle from "../../../assets/js/components/common/SheetSubtitle";
+import {hideLoader, showLoader} from "../../../../utils/common-utils";
+import {customSomethingWentWrongSwal, customSuccessSwal} from "../../../../utils/sweetalert-utils";
+import SheetSubtitle from "../../../../components/common/SheetSubtitle";
 
 /**
  *

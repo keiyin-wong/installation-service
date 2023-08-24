@@ -1,4 +1,4 @@
-import {pageContext} from "../../utils/common-utils";
+import {pageContext} from "../utils/common-utils";
 
 export function getAllServicesApi() {
     return $.ajax({
