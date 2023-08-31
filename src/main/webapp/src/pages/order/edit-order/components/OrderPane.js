@@ -12,7 +12,7 @@ import SheetSubtitle from "../../../../components/common/SheetSubtitle";
  * @returns {{$component: (*|jQuery|HTMLElement), setForm: setForm}}
  * @constructor
  */
-export default function EditOrderPane(props) {
+export default function OrderPane(props) {
     let orderId = props.orderId;
 
     // ========================================

@@ -1,15 +1,3 @@
-const add = (parent, child) => {
-    parent.appendChild(child?.nodeType ? child : document.createTextNode(child));
-};
-
-const appendChild = (parent, child) => {
-    if (Array.isArray(child)) {
-        child.forEach((nestedChild) => appendChild(parent, nestedChild));
-    } else {
-        add(parent, child);
-    }
-};
-
 export default class Jq {
     static createElement(tag, props, ...children) {
         if (typeof tag === "function") {
@@ -17,82 +5,95 @@ export default class Jq {
         }
 
         if (tag instanceof $) {
-            Object.entries(props || {}).forEach(([name, value]) => {
-                if (name.startsWith("on")) {
-                    switch (name) {
-                        case "onReady":
-                            tag.ready(value);
-                            break;
-                        default:
-                            if (name.toLowerCase() in window) {
-                                tag.on(name.toLowerCase().substr(2), value);
-                            }
-                            break;
-                    }
-                } else {
-                    switch (name) {
-                        case "className":
-                            tag.attr("class", value);
-                            break;
-                        case "style":
-                            tag.css(value);
-                            break;
-                        default:
-                            tag.attr(name, value);
-                    }
-                }
-            });
-            children.forEach((child) => {
-                if (child instanceof $) {
-                    tag.append(child);
-                } else {
-                    tag.append(
-                        $(document.createTextNode(child))
-                    );
-                }
-            });
+            assignAttributes(tag, props)
+            appendChildren(tag, children)
             return tag;
         }
 
-
         const element = document.createElement(tag);
         let $element = $(element);
-        Object.entries(props || {}).forEach(([name, value]) => {
-            if (name.startsWith("on")) {
-                switch (name) {
-                    case "onReady":
-                        $element.ready(value);
-                        break;
-                    default:
-                        if (name.toLowerCase() in window) {
-                            $element.on(name.toLowerCase().substr(2), value);
-                        }
-                        break;
-                }
-            } else {
-                switch (name) {
-                    case "className":
-                        $element.attr("class", value);
-                        break;
-                    case "style":
-                        $element.css(value);
-                        break;
-                    default:
-                        $element.attr(name, value);
-                }
-            }
-        });
-
-        children.forEach((child) => {
-            if (child instanceof $) {
-                $element.append(child);
-            } else {
-                $element.append(
-                    $(document.createTextNode(child))
-                );
-            }
-        });
+        assignAttributes($element, props)
+        appendChildren($element, children)
 
         return $element
     }
+}
+
+function assignAttributes($element, props) {
+    Object.entries(props || {}).forEach(([name, value]) => {
+        if (name.startsWith("on")) {
+            switch (name) {
+                case "onReady":
+                    $element.ready(value);
+                    break;
+                default:
+                    let eventName = name.toLowerCase().substr(2);
+                    if (name.toLowerCase() in window) {
+                        $element.on(eventName, value);
+                    } else {
+                        // Replace the underscore with a dot
+                        eventName = eventName.replaceAll("_", ".");
+                        $element.on(eventName, value);
+                    }
+                    break;
+            }
+        } else {
+            switch (name) {
+                case "className":
+                    $element.attr("class", value);
+                    break;
+                case "style":
+                    $element.css(value);
+                    break;
+                case "htmlFor":
+                    $element.attr("for", value);
+                    break;
+                case "disabled":
+                    if (value) {
+                        $element.prop("disabled", true);
+                    }
+                    break;
+                case "required":
+                    if (value) {
+                        $element.prop("required", true);
+                    }
+                    break;
+                case "readonly":
+                    if (value) {
+                        $element.prop("readonly", true);
+                    }
+                    break;
+                case "checked":
+                    if (value) {
+                        $element.prop("checked", true);
+                    }
+                    break;
+                default:
+                    $element.attr(name, value);
+            }
+        }
+    });
+}
+
+function appendChildren($parent, children) {
+    children.forEach((child) => {
+        // if (child instanceof $) {
+        //     $parent.append(child);
+        // }
+        // else {
+        //     $parent.append(
+        //         $(document.createTextNode(child))
+        //     );
+        // }
+        if (typeof child == 'string') {
+            $parent.append(
+                $(document.createTextNode(child))
+            );
+        } else if (child instanceof $) {
+            $parent.append(child);
+        } else {
+            // console.log("child", child)
+            $parent.append(child);
+        }
+    });
 }

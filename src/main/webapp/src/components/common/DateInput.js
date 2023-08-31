@@ -1,3 +1,5 @@
+import moment from "moment";
+
 /**
  *
  * Create a single date input with date range picker
@@ -17,7 +19,11 @@ export default function DateInput() {
             locale: {
                 format: "DD-MM-YYYY",
                 cancelLabel: 'Clear'
-            }
+            },
+            ranges: {
+                'Today': [moment(), moment()],
+            },
+            showCustomRangeLabel: false,
         })
     })
 

@@ -5,15 +5,15 @@ import moment from "moment";
 import {createOrderApi} from "../../../apis/order-fetchers";
 import {customSomethingWentWrongSwal, customSuccessSwal} from "../../../utils/sweetalert-utils";
 import {hideLoader, showLoader} from "../../../utils/common-utils";
+import {jqueryValidateClassOptions} from "../../../utils/jquery-utils";
 
 /**
  * @param {function} [props.create.onSuccess] - On success callback, default is show success swal
  * @param {function} [props.create.onFailure] - On failure callback, default is show something went wrong swal
  * @param {function} [props.create.onComplete] - On complete callback, default is empty function
-
  *
- * @returns {{$component: (*|jQuery|HTMLElement)}}
  *
+ * @returns {{$component: (*|jQuery|HTMLElement), showModal: function}}
  */
 export default function AddOrderModal(props) {
 
@@ -29,22 +29,37 @@ export default function AddOrderModal(props) {
     };
     let createOnComplete = props?.create?.onComplete ?? function () {};
 
-    // ========================================
+    // ================[ Jquery Elements ]====================
 
     let $modal = <div />;
+    let $form = <form />;
     let $dateInput = (<DateInput />);
+    $dateInput.prop("name", "date");
     let $remarks = <textarea rows="5" />
     let $comments = <textarea rows="3" />
 
-    // ========================================
+    // ================[End of Jquery Elements ]===============
 
-    $dateInput.on("apply.daterangepicker", function (ev, picker) {
-        $(this).trigger("input");
-    });
+
+    // $dateInput.on("apply.daterangepicker", function (ev, picker) {
+    //     $(this).trigger("input");
+    // });
 
     $modal.on("show.bs.modal", function (e) {
         resetForm();
     })
+
+    function initFormValidation() {
+        $form.validate({
+            ...jqueryValidateClassOptions,
+            rules: {
+                [$dateInput.prop("name")]: {
+                    required: true,
+                }
+            }
+        })
+    }
+
 
 
     function resetForm() {
@@ -55,6 +70,10 @@ export default function AddOrderModal(props) {
 
     function onCreate(e) {
     	e.preventDefault();
+
+        if(!$form.valid()) {
+            return;
+        }
 
         $modal.modal("hide");
         showLoader();
@@ -82,7 +101,10 @@ export default function AddOrderModal(props) {
                     </div>
                     <div className="modal-body">
                         <SheetSubtitle title="Order Details"/>
-                        <form>
+                        <$form
+                            className="needs-validation"
+                            onReady={() => {initFormValidation()}}
+                        >
                             <div className="row mb-3">
                                 <label className="col-sm-2 col-form-label">Order Date</label>
                                 <div className="col-sm-10">
@@ -103,7 +125,7 @@ export default function AddOrderModal(props) {
                                     <$comments className="form-control"/>
                                 </div>
                             </div>
-                        </form>
+                        </$form>
                     </div>
                     <div className="modal-footer">
                         <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">
@@ -120,5 +142,8 @@ export default function AddOrderModal(props) {
 
     return {
         $component: $component,
+        showModal: function () {
+            $modal.modal("show");
+        }
     }
 }

@@ -17,7 +17,11 @@ import {customSomethingWentWrongSwal, customSuccessSwal} from "../../../../utils
  * @param props
  * @param {string|number} props.orderId - id of the order
  *
- * @returns {*|jQuery}
+ * @return {{
+ *     $component: jQuery|*,
+ *     refreshTable: function
+ * }}
+ *
  */
 export default function EditOrderDetailTable(props) {
     let orderId = props.orderId;
@@ -65,6 +69,16 @@ export default function EditOrderDetailTable(props) {
         getOrderVOApi(orderId).done(function (data) {
             let subTotal = 0;
             $tbody.empty();
+
+            if (data.orderDetails.length === 0) {
+                $tbody.append(
+                    <tr>
+                        <td colSpan={10} className="text-center">No data</td>
+                    </tr>
+                )
+                return;
+            }
+
             data.orderDetails.forEach(function (orderDetail, index) {
                 $tbody.append(
                     $("<tr>").append(
@@ -189,26 +203,31 @@ export default function EditOrderDetailTable(props) {
         })
     }
 
-    return (
-        $("<div>").addClass("table-responsive").append(
-            $table.addClass("table w-100").append(
-                $("<thead>").append(
-                    $("<tr>").append(
-                        $("<th>").text("#"),
-                        $("<th>").text("Service"),
-                        $("<th>").text("Description"),
-                        $("<th>").text("Width"),
-                        $("<th>").text("Height"),
-                        $("<th>").text("Ft"),
-                        $("<th>").text("Quantity"),
-                        $("<th>").text("Unit Price"),
-                        $("<th>").addClass("text-end").text("Total Price"),
-                        $("<th>")
-                    )
-                ),
-                $tbody,
-                $tfoot
-            )
+    let $component = $("<div>").addClass("table-responsive").append(
+        $table.addClass("table w-100").append(
+            $("<thead>").append(
+                $("<tr>").append(
+                    $("<th>").text("#"),
+                    $("<th>").text("Service"),
+                    $("<th>").text("Description"),
+                    $("<th>").text("Width"),
+                    $("<th>").text("Height"),
+                    $("<th>").text("Ft"),
+                    $("<th>").text("Quantity"),
+                    $("<th>").text("Unit Price"),
+                    $("<th>").addClass("text-end").text("Total Price"),
+                    $("<th>")
+                )
+            ),
+            $tbody,
+            $tfoot
         )
-    )
+    );
+
+    return {
+        $component,
+        refreshTable: function () {
+            loadData();
+        }
+    }
 }

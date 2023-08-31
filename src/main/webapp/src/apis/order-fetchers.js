@@ -67,6 +67,20 @@ export function createOrderApi(order) {
     })
 }
 
+/**
+ *
+ *
+ * @param {string|number} id - the order id
+ *
+ * @returns {*|jQuery}
+ */
+export function deleteOrderApi(id) {
+    return $.ajax({
+        url: `${pageContext}/orders/${id}/delete`,
+        type: "POST",
+        dataType: "json",
+    })
+}
 
 
 /**

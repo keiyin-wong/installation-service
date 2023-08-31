@@ -68,3 +68,15 @@ export let jqueryValidateTooltipOptions = {
         error.insertAfter(element);
     },
 }
+
+export let jqueryValidateTooltipOptionsWithSelect2 = {
+    ...jqueryValidateClassOptions,
+    errorPlacement: function (error, element) {
+        // If select2, handle the problem
+        if (element.hasClass("select2-hidden-accessible")) {
+            error.insertAfter(element.next(".select2-container"));
+        } else {
+            error.insertAfter(element);
+        }
+    },
+}

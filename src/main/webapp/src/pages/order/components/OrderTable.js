@@ -2,7 +2,14 @@ import {convertNumberToCurrency, pageContext} from "../../../utils/common-utils"
 import {convertUnixTimestampToMomentDate} from "../../../utils/moment-utils";
 import MoreOptions, {MoreOptionsItemWithIcon} from "../../../components/common/MoreOptions";
 import {jqueryDatatablePreXhrProcessing} from "../../../utils/jquery-utils";
+import {customSomethingWentWrongSwal, customSuccessSwal, customSwal} from "../../../utils/sweetalert-utils";
+import {deleteOrderApi} from "../../../apis/order-fetchers";
 
+/**
+ *
+ * @returns {{$table: (*|jQuery|HTMLElement), refreshTable: refreshTable, $component: (*|jQuery)}}
+ * @constructor
+ */
 export default function OrderTable() {
 
     // ========================================
@@ -40,7 +47,7 @@ export default function OrderTable() {
                 {
                     data: "date",
                     name: "date",
-                    orderable: false,
+                    orderable: true,
                     render: function (data, type, row, meta) {
                         if (type === "display") {
                             return convertUnixTimestampToMomentDate(data)
@@ -72,8 +79,8 @@ export default function OrderTable() {
                 },
                 {
                     data: "total",
-                    name: "total",
-                    orderable: false,
+                    name: "total_price",
+                    orderable: true,
                     className: "dt-right",
                     render: function (data, type) {
                         if (type === "display") {
@@ -96,6 +103,40 @@ export default function OrderTable() {
                                         text: "Edit",
                                         href: `${pageContext}/edit-order.html?orderId=${rowData.id}`,
                                         iconClass: "bi bi-pencil-square",
+                                    }),
+                                    MoreOptionsItemWithIcon({
+                                        text: "Delete",
+                                        iconClass: "bi bi-trash",
+                                        onClick: function (e) {
+                                            e.preventDefault();
+                                            customSwal.fire({
+                                                icon: "warning",
+                                                title: "Are you sure?",
+                                                text: `Delete order ${rowData.id}?. You won't be able to revert this!`,
+                                                confirmButtonText: "Yes, delete it!",
+                                                showCancelButton: true,
+                                                allowOutsideClick: false,
+                                                showCloseButton: true,
+                                            }).then(async (result) => {
+                                                if (result.isConfirmed) {
+                                                    deleteOrderApi(rowData.id).done(function (response) {
+                                                        if (response.status) {
+                                                            customSuccessSwal.fire({}).then(function () {
+                                                                $table.DataTable().ajax.reload();
+                                                            })
+                                                        } else {
+                                                            customSomethingWentWrongSwal.fire({}).then(function () {
+                                                                $table.DataTable().ajax.reload();
+                                                            })
+                                                        }
+                                                    }).fail(function () {
+                                                        customSomethingWentWrongSwal.fire({}).then(function () {
+                                                            $table.DataTable().ajax.reload();
+                                                        })
+                                                    })
+                                                }
+                                            })
+                                        }
                                     })
                                 ]
                             })
@@ -106,8 +147,7 @@ export default function OrderTable() {
         })
     });
 
-
-    return (
+    let $component = (
         $table.addClass("table w-100").append(
             $("<thead>").append(
                 $("<tr>").append(
@@ -122,4 +162,13 @@ export default function OrderTable() {
             $tbody
         )
     )
+
+    return {
+        $component,
+        refreshTable: function () {
+            $table.DataTable().ajax.reload();
+        },
+        $table
+    }
+
 }

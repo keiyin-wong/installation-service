@@ -1,29 +1,3 @@
-
-/**
- *
- * @param props
- * @param {Array<TabItem>} props.tabItems
- * @param {Array<TabPane>} props.tabPanes
- *
- * @returns {*|jQuery}
- */
-export default function Tabs(props) {
-    let tabItems = props.tabItems ?? [];
-    let tabPanes = props.tabPanes ?? [];
-
-
-    return (
-        $("<div>").append(
-            $("<ul>").addClass("nav nav-tabs nav-tabs-bordered").append(
-                tabItems
-            ),
-            $("<div>").addClass("tab-content pt-2").append(
-                tabPanes
-            )
-        )
-    )
-}
-
 /**
  *
  * Tab Item
@@ -33,19 +7,23 @@ export default function Tabs(props) {
  * @param {string} props.targetId - id of the target, without #
  * @param {boolean} [props.active=false] - is active tab
  *
+ * @returns {*|jQuery}
  */
 export function TabItem(props) {
     let text = props.text;
     let targetId = props.targetId;
     let active = props.active;
 
-    return $("<li>").addClass("nav-item").append(
-        $("<button>").addClass(
-            active ? "nav-link active" : "nav-link"
-        ).attr({
-            "data-bs-toggle": "tab",
-            "data-bs-target": `#${targetId}`
-        }).text(text)
+    return (
+        <li className="nav-item">
+            <button
+                className={active ? "nav-link active" : "nav-link"}
+                data-bs-toggle="tab"
+                data-bs-target={`#${targetId}`}
+            >
+                {text}
+            </button>
+        </li>
     )
 }
 
@@ -56,24 +34,38 @@ export function TabItem(props) {
  * @param props
  * @param {string} props.id - id of the tab pane, without #
  * @param {boolean} [props.active=false] - is active tab pane
- * @param {jQuery} props.paneContent - content of the tab pane
+ * @param {JSX.Element} [children] - JSX children
  *
  * @returns {*|jQuery}
  * @constructor
  */
-export function TabPane(props) {
+export function TabPane(props, children) {
 
     let id = props.id;
     let active = props.active;
-    let paneContent = props.paneContent;
 
     return (
-        $("<div>").addClass(
-            active ? "tab-pane fade show active" : "tab-pane fade"
-        ).attr({
-            "id": id,
-        }).append(
-            paneContent
-        )
+        <div
+            className={active ? "tab-pane fade show active" : "tab-pane fade"}
+            id={id}
+        >
+            {children}
+        </div>
+    )
+}
+
+export function TabItems(props, children) {
+    return (
+        <ul className="nav nav-tabs nav-tabs-bordered">
+            {children}
+        </ul>
+    )
+}
+
+export function TabPanes(props, children) {
+    return (
+        <div className="tab-content pt-2">
+            {children}
+        </div>
     )
 }
