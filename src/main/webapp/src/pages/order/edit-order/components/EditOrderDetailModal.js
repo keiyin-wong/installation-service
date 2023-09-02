@@ -5,7 +5,7 @@ import {
     calculateTotalPriceWithFT,
     convertNumberToCurrency,
     formatServiceName, hideLoader,
-    showLoader
+    showLoader, calculateTotalPriceWithPingFeng
 } from "../../../../utils/common-utils";
 import {updateOrderDetailApi} from "../../../../apis/order-fetchers";
 import {jqueryValidateClassOptions} from "../../../../utils/jquery-utils";
@@ -281,6 +281,9 @@ export default function EditOrderDetailModal(props) {
                 }
                 break;
             case 2: // ping feng
+                if (width && height && unitPrice) {
+                    totalPrice = calculateTotalPriceWithPingFeng(width, height, unitPrice);
+                }
                 break;
             default:
                 break;

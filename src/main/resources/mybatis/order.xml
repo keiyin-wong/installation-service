@@ -40,7 +40,6 @@
             resultMap="com.wahshoon.ism.service.ServiceMapper.ServiceResultMap"
         />
     </resultMap>
-
     <select id="getOrder" resultMap="orderResultMap">
         SELECT * FROM `order`
         <where>
@@ -125,6 +124,28 @@
             id = #{id}
     </update>
 
+    <insert id="createOrder" parameterType="com.wahshoon.ism.order.Order">
+        INSERT INTO `order` (
+            id,
+            date,
+            remarks,
+            comments
+        ) VALUES (
+            #{id},
+            #{date},
+            #{remarks},
+            #{comments}
+        )
+    </insert>
+
+    <delete id="deleteOrder">
+        DELETE
+            FROM `order`
+        WHERE
+            id = #{orderId}
+    </delete>
+
+
 
     <!-- ================================= -->
     <!-- Order Detail -->
@@ -164,6 +185,26 @@
         ]]>
     </select>
 
+    <select id="getLargestOrderIdPlusOne" resultType="java.lang.Integer">
+        <![CDATA[
+        SELECT
+            CAST(MAX(id)+1 AS INT)
+        FROM
+            `order`
+        ]]>
+    </select>
+
+    <select id="getLargestLineNumberByOrderId" resultType="java.lang.Integer">
+        <![CDATA[
+        SELECT
+            MAX(line_number)
+        FROM
+            `order_detail`
+        WHERE
+            order_id = #{orderId}
+        ]]>
+    </select>
+
     <update id="updateOrderDetail">
         <![CDATA[
         UPDATE
@@ -183,6 +224,32 @@
             line_number = #{lineNumber}
         ]]>
     </update>
+
+    <insert id="createOrderDetail" parameterType="com.wahshoon.ism.order.OrderDetail">
+        INSERT INTO `order_detail` (
+            order_id,
+            line_number,
+            service_id,
+            description,
+            width,
+            height,
+            quantity,
+            final_price,
+            updated_time,
+            updated_by
+        ) VALUES (
+            #{orderId},
+            #{lineNumber},
+            #{serviceId},
+            #{description},
+            #{width},
+            #{height},
+            #{quantity},
+            #{finalPrice},
+            NOW(),
+            #{updatedBy}
+        )
+    </insert>
 
     <!-- =========End of Order Detail ========= -->
 

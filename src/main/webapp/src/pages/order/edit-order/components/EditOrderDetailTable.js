@@ -185,6 +185,14 @@ export default function EditOrderDetailTable(props) {
                                                 });
                                                 $editOrderDetailModal.modal("show");
                                             }
+                                        }),
+                                        MoreOptionsItemWithIcon({
+                                            text: "Delete",
+                                            iconClass: "bi bi-trash",
+                                            onClick: function (e) {
+                                                e.preventDefault();
+                                                alert("Delete")
+                                            }
                                         })
                                     ]
                                 })

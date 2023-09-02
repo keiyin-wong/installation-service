@@ -69,7 +69,7 @@ export let jqueryValidateTooltipOptions = {
     },
 }
 
-export let jqueryValidateTooltipOptionsWithSelect2 = {
+export let jqueryValidateClassOptionsWithSelect2 = {
     ...jqueryValidateClassOptions,
     errorPlacement: function (error, element) {
         // If select2, handle the problem

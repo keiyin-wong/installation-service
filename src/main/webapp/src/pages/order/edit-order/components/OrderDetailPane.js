@@ -1,6 +1,7 @@
 import SheetSubtitle from "../../../../components/common/SheetSubtitle";
 import EditOrderDetailTable from "./EditOrderDetailTable";
 import AddOrderDetailModal from "./AddOrderDetailModal";
+import {customSomethingWentWrongSwal, customSuccessSwal, customSwal} from "../../../../utils/sweetalert-utils";
 
 /**
  *
@@ -17,8 +18,35 @@ export default function OrderDetailPane(props) {
 
     let {
         $component: $AddOrderDetailModal,
-        showModal: showAddOrderDetailModal
-    } = AddOrderDetailModal();
+        showModal: showAddOrderDetailModal,
+        setFormData: setAddOrderDetailModalFormData
+    } = AddOrderDetailModal({
+        orderId: orderId,
+        settings: {
+            serviceList: {
+                data: serviceListFromServer,
+                loadFromServer: false
+            }
+        },
+        create: {
+            onSuccess: (res) => {
+                if (res.status) {
+                    customSuccessSwal.fire({}).then(() => {
+                        refreshEditOrderDetailTable();
+                    });
+                } else {
+                    customSomethingWentWrongSwal.fire({}).then(() => {
+                        refreshEditOrderDetailTable();
+                    });
+                }
+            },
+            onFailure: () => {
+                customSomethingWentWrongSwal.fire({}).then(() => {
+                    refreshEditOrderDetailTable();
+                });
+            }
+        }
+    });
 
     let {
         $component: $EditOrderDetailTable,
@@ -55,6 +83,15 @@ export default function OrderDetailPane(props) {
                     className="btn btn-primary"
                     type="button"
                     onClick={() => {
+                        // Clear the form data
+                        setAddOrderDetailModalFormData({
+                            serviceId: "",
+                            description: "",
+                            width: "",
+                            height: "",
+                            quantity: "",
+                            unitPrice: "",
+                        });
                         showAddOrderDetailModal();
                     }}
                 >

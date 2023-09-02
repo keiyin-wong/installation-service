@@ -19,6 +19,9 @@ public interface OrderMapper {
         @Param("limit") Integer limit
     );
 
+    Integer getLargestOrderIdPlusOne();
+    Integer getLargestLineNumberByOrderId(String orderId);
+
     Integer getOrderCountForDatatable();
 
     Integer updateOrder(
@@ -28,9 +31,16 @@ public interface OrderMapper {
             Order order
     );
 
-    // ============OrderDetail================
+    Integer createOrder(Order order);
+
+    Integer deleteOrder(String orderId);
+
+    // ==============================================
+    // Order Detail
+    // ==============================================
 
     List<OrderDetailVO> getOrderDetailListByOrderId(String orderId);
+
 
     Integer updateOrderDetail(
             @Param("orderId")
@@ -40,4 +50,6 @@ public interface OrderMapper {
             @Param("orderDetail")
             OrderDetail orderDetail
     );
+
+    Integer createOrderDetail(OrderDetail orderDetail);
 }

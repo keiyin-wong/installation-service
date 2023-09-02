@@ -118,9 +118,47 @@ public class OrderController {
     }
 
 
+    @PostMapping(value = "/create")
+    public WriteResponse createOrder(
+            @ModelAttribute
+            Order order
+    ) {
+        log.info("Creating order.");
+        WriteResponse writeResponse = new WriteResponse();
+        if (orderService.createOrder(order) > 0) {
+            log.info("Successfully created order.");
+            writeResponse.setStatus(true);
+            writeResponse.setData(order);
+        } else {
+            log.info("Failed to create order.");
+            writeResponse.setStatus(false);
+        }
+        return writeResponse;
+    }
 
+    @PostMapping(value = "/{orderId}/delete")
+    public WriteResponse deleteOrder(
+            @PathVariable("orderId")
+            String orderId
+    ) {
+        log.info("Deleting order. [orderId={}]", orderId);
+        WriteResponse writeResponse = new WriteResponse();
+        if (orderService.deleteOrder(orderId) > 0) {
+            log.info("Successfully deleted order. [orderId={}]", orderId);
+            writeResponse.setStatus(true);
+        } else {
+            log.info("Failed to delete order. [orderId={}]", orderId);
+            writeResponse.setStatus(false);
+        }
+        return writeResponse;
+    }
+
+
+    // ==============================================
     // Order Detail
-    @PostMapping(value = "/{orderIdParam}/line-number/{lineNumberParam}/order-detail/update")
+    // ==============================================
+
+    @PostMapping(value = "/{orderIdParam}/line-number/{lineNumberParam}/order-details/update")
     public WriteResponse updateOrderDetail(
             @PathVariable("orderIdParam")
             String orderId,
@@ -139,6 +177,23 @@ public class OrderController {
             log.info("Failed to update order detail. [orderId={}, lineNumber={}]", orderId, lineNumber);
             writeResponse.setStatus(false);
         }
+        return writeResponse;
+    }
+
+    @PostMapping(value = "/{orderIdParam}/order-details/create")
+    public WriteResponse createOrderDetail(
+            @PathVariable("orderIdParam")
+            String orderId,
+            @ModelAttribute
+            OrderDetail orderDetail
+    ) {
+        log.info("Creating order detail. [orderId={}]", orderId);
+        WriteResponse writeResponse = new WriteResponse();
+        orderDetail.setOrderId(orderId);
+        log.info("OrderDetail to be created. {}", orderDetail.toShortPrefixString());
+        orderService.createOrderDetail(orderDetail);
+        log.info("Successfully created order detail. [orderId={}]", orderId);
+        writeResponse.setStatus(true);
         return writeResponse;
     }
 }

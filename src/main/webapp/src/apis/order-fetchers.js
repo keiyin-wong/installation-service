@@ -83,6 +83,11 @@ export function deleteOrderApi(id) {
 }
 
 
+// =================================================
+// Order Detail
+// =================================================
+
+
 /**
  *
  * @param {number|string} orderId
@@ -116,7 +121,43 @@ export function updateOrderDetailApi(orderId, lineNumber, orderDetail) {
     }
 
     return $.ajax({
-        url: `${pageContext}/orders/${orderId}/line-number/${lineNumber}/order-detail/update`,
+        url: `${pageContext}/orders/${orderId}/line-number/${lineNumber}/order-details/update`,
+        type: "POST",
+        dataType: "json",
+        data: data
+    })
+}
+
+/**
+ * Create a new order detail
+ *
+ * @param orderId - the order id
+ * @param orderDetail - the order detail
+ * @param {number|string} orderDetail.serviceId - the service id
+ * @param {string} orderDetail.description - the description
+ * @param {number|string} orderDetail.width - the width
+ * @param {number|string} orderDetail.height - the height
+ * @param {number|string} orderDetail.quantity - the quantity
+ * @param {number|string} orderDetail.finalPrice - the final unit price, no need in cents, it will be automatically converted
+ *
+ * @returns {*|jQuery}
+ */
+export function createOrderDetailApi(orderId, orderDetail) {
+    if (!orderId) {
+        throw new Error("orderId is required")
+    }
+
+    let data = {
+        serviceId : orderDetail.serviceId,
+        description : orderDetail.description,
+        width : orderDetail.width,
+        height : orderDetail.height,
+        quantity : orderDetail.quantity,
+        finalPrice : (Number(orderDetail.finalPrice) * 100).toFixed(0), // Convert to cents
+    }
+
+    return $.ajax({
+        url: `${pageContext}/orders/${orderId}/order-details/create`,
         type: "POST",
         dataType: "json",
         data: data

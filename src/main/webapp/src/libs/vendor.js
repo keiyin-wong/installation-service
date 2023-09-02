@@ -12,6 +12,7 @@ import "select2/dist/js/select2.min";
 import "select2/dist/css/select2.min.css";
 
 import "jquery-validation/dist/jquery.validate.min";
+import "jquery-validation/dist/additional-methods.min";
 
 import "daterangepicker/daterangepicker";
 import "daterangepicker/daterangepicker.css";
