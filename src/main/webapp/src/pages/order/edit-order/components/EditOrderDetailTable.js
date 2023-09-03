@@ -6,9 +6,14 @@ import {
     convertNumberToCurrency, formatServiceName, calculateTotalPriceWithPingFeng
 } from "../../../../utils/common-utils";
 import MoreOptions, {MoreOptionsItemWithIcon} from "../../../../components/common/MoreOptions";
-import {getOrderVOApi} from "../../../../apis/order-fetchers";
+import {deleteOrderDetailApi, getOrderVOApi} from "../../../../apis/order-fetchers";
 import EditOrderDetailModal from "./EditOrderDetailModal";
-import {customSomethingWentWrongSwal, customSuccessSwal} from "../../../../utils/sweetalert-utils";
+import {
+    customConfirmSwal,
+    customSomethingWentWrongSwal,
+    customSuccessSwal,
+    customSwal
+} from "../../../../utils/sweetalert-utils";
 
 /**
  *
@@ -39,17 +44,17 @@ export default function EditOrderDetailTable(props) {
         update: {
             onSuccess: function (res) {
                 if (res.status) {
-                    customSuccessSwal.fire().then(() => {
+                    customSuccessSwal.fire({}).then(() => {
                         loadData();
                     })
                 } else {
-                    customSomethingWentWrongSwal.fire().then(() => {
+                    customSomethingWentWrongSwal.fire({}).then(() => {
                         loadData();
                     })
                 }
             },
-            onFailure: function (err) {
-                customSomethingWentWrongSwal.fire().then(() => {
+            onFailure: function () {
+                customSomethingWentWrongSwal.fire({}).then(() => {
                     loadData();
                 })
             }
@@ -191,7 +196,29 @@ export default function EditOrderDetailTable(props) {
                                             iconClass: "bi bi-trash",
                                             onClick: function (e) {
                                                 e.preventDefault();
-                                                alert("Delete")
+                                                customConfirmSwal.fire({
+                                                    text: "Are you sure you want to delete this order detail?",
+                                                }).then((result) => {
+                                                    if (result.isConfirmed) {
+                                                        deleteOrderDetailApi(orderDetail.orderId, orderDetail.lineNumber).done(
+                                                            function (res) {
+                                                                if (res.status) {
+                                                                    customSuccessSwal.fire({}).then(() => {
+                                                                        loadData();
+                                                                    })
+                                                                } else {
+                                                                    customSomethingWentWrongSwal.fire({}).then(() => {
+                                                                        loadData();
+                                                                    })
+                                                                }
+                                                            }
+                                                        ).fail(function () {
+                                                            customSomethingWentWrongSwal.fire({}).then(() => {
+                                                                loadData();
+                                                            })
+                                                        })
+                                                    }
+                                                })
                                             }
                                         })
                                     ]

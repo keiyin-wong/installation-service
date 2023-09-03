@@ -146,7 +146,6 @@
     </delete>
 
 
-
     <!-- ================================= -->
     <!-- Order Detail -->
     <!-- ================================= -->
@@ -250,6 +249,15 @@
             #{updatedBy}
         )
     </insert>
+
+    <delete id="deleteOrderDetail">
+        DELETE
+            FROM `order_detail`
+        WHERE
+            order_id = #{orderId}
+        AND
+            line_number = #{lineNumber}
+    </delete>
 
     <!-- =========End of Order Detail ========= -->
 

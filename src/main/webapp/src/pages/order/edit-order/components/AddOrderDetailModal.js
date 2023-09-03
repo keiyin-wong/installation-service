@@ -313,7 +313,7 @@ export default function AddOrderDetailModal(props) {
                             return $quantityDiv.is(":visible");
                         }
                     },
-                    number: true
+                    digits: true
                 },
                 [$unitPriceInput.prop("name")]: {
                     required: true,
@@ -367,7 +367,6 @@ export default function AddOrderDetailModal(props) {
     	})
     }
 
-
     let $component = (
         <$modal
             class="modal fade"
@@ -406,12 +405,40 @@ export default function AddOrderDetailModal(props) {
                                             switch (service?.calculationType) {
                                                 case 0: // FT
                                                 case 2: {
-                                                    setFormData({
-                                                        ...formDataStore.getState(),
-                                                        quantity: "0",
-                                                        serviceId: value,
-                                                        unitPrice: service?.price == null ? "0" : (service.price/100).toString(),
-                                                    })
+                                                    if (service.serviceDiffPrices?.length > 0) {
+                                                        // Reverse the array based on the height
+                                                        service.serviceDiffPrices.sort(function (a, b) {
+                                                            return b.height - a.height;
+                                                        });
+
+                                                        let price = null;
+
+                                                        // 由大到下，如果现在的height大过，就exit loop by return false.
+                                                        $.each(service.serviceDiffPrices, function (index, serviceDiffPrice) {
+                                                            if (Number(formDataStore.getState().height) >= serviceDiffPrice.height) {
+                                                                price = serviceDiffPrice.price;
+                                                                return false;
+                                                            }
+
+                                                            // if reached the last, then return the smallest height
+                                                            if(index === service.serviceDiffPrices.length - 1){
+                                                                price = service.serviceDiffPrices[service.serviceDiffPrices.length - 1].price;
+                                                            }
+                                                        });
+                                                        setFormData({
+                                                            ...formDataStore.getState(),
+                                                            quantity: "0",
+                                                            serviceId: value,
+                                                            unitPrice: price == null ? "0" : (price/100).toString(),
+                                                        })
+                                                    } else {
+                                                        setFormData({
+                                                            ...formDataStore.getState(),
+                                                            quantity: "0",
+                                                            serviceId: value,
+                                                            unitPrice: service?.price == null ? "0" : (service.price/100).toString(),
+                                                        })
+                                                    }
                                                     break;
                                                 }
                                                 case 1: {
@@ -470,7 +497,48 @@ export default function AddOrderDetailModal(props) {
                                         type="number"
                                         className="form-control"
                                         name="height"
-                                        onInput={handleChanges}
+                                        onInput={function (e) {
+                                            const {name, value} = e.target;
+
+                                            // Change the unit price based on the height if the service diff price
+
+                                            if (formDataStore.getState().serviceId !== null && formDataStore.getState().serviceId !== "") {
+                                                let service = serviceList.find(service => service.id === Number(formDataStore.getState().serviceId));
+                                                switch (service?.calculationType) {
+                                                    case 0: // FT
+                                                    case 2: {
+                                                        if (service.serviceDiffPrices?.length > 0) {
+                                                            service.serviceDiffPrices.sort(function (a, b) {
+                                                                return b.height - a.height;
+                                                            });
+
+                                                            let price = null;
+
+                                                            // 由大到下，如果现在的height大过，就exit loop by return false.
+                                                            $.each(service.serviceDiffPrices, function (index, serviceDiffPrice) {
+                                                                if (Number(value) >= serviceDiffPrice.height) {
+                                                                    price = serviceDiffPrice.price;
+                                                                    return false;
+                                                                }
+
+                                                                // if reached the last, then return the smallest height
+                                                                if (index === service.serviceDiffPrices.length - 1) {
+                                                                    price = service.serviceDiffPrices[service.serviceDiffPrices.length - 1].price;
+                                                                }
+                                                            });
+                                                            setFormData({
+                                                                ...formDataStore.getState(),
+                                                                [name]: value,
+                                                                unitPrice: price == null ? "0" : (price / 100).toString(),
+                                                            })
+                                                            return;
+                                                        }
+                                                        break;
+                                                    }
+                                                }
+                                            }
+                                            handleChanges(e)
+                                        }}
                                     />
                                 </div>
                             </$heightDiv>

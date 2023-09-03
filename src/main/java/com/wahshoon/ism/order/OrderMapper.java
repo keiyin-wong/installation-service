@@ -52,4 +52,11 @@ public interface OrderMapper {
     );
 
     Integer createOrderDetail(OrderDetail orderDetail);
+
+    Integer deleteOrderDetail(
+            @Param("orderId")
+            String orderId,
+            @Param("lineNumber")
+            Integer lineNumber
+    );
 }

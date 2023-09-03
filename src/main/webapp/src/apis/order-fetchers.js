@@ -163,3 +163,50 @@ export function createOrderDetailApi(orderId, orderDetail) {
         data: data
     })
 }
+
+/**
+ *
+ * Delete an order detail
+ *
+ * @param {string|number} orderId - the order id
+ * @param {string|number} lineNumber - the line number
+ * @returns {*|jQuery}
+ */
+export function deleteOrderDetailApi(orderId, lineNumber) {
+    if (!orderId) {
+        throw new Error("orderId is required")
+    }
+    if (!lineNumber) {
+        throw new Error("lineNumber is required")
+    }
+
+    return $.ajax({
+        url: `${pageContext}/orders/${orderId}/line-number/${lineNumber}/order-details/delete`,
+        type: "POST",
+        dataType: "json",
+    })
+}
+
+
+// ================[ Order Invoice ]====================
+
+/**
+ *
+ * Get the order invoice url
+ *
+ * @param {string|number} orderId
+ * @param {boolean} [inline=true]
+ * @param {boolean} [mergeWithSketch=false]
+ * @returns {string}
+ */
+export function getOrderInvoiceUrl(orderId, inline, mergeWithSketch) {
+    if (orderId == null) {
+        throw new Error("orderId is required")
+    }
+    let inlineParam = inline == null ? true : inline;
+    let mergeWithSketchParam = mergeWithSketch == null ? false : mergeWithSketch;
+
+    return `${pageContext}/orders/${orderId}/invoice?inline=${inlineParam}&mergeWithSketch=${mergeWithSketchParam}`
+}
+
+// ================[End of Order Invoice ]===============

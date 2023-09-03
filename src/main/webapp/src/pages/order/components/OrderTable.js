@@ -1,9 +1,9 @@
 import {convertNumberToCurrency, pageContext} from "../../../utils/common-utils";
 import {convertUnixTimestampToMomentDate} from "../../../utils/moment-utils";
-import MoreOptions, {MoreOptionsItemWithIcon} from "../../../components/common/MoreOptions";
 import {jqueryDatatablePreXhrProcessing} from "../../../utils/jquery-utils";
-import {customSomethingWentWrongSwal, customSuccessSwal, customSwal} from "../../../utils/sweetalert-utils";
-import {deleteOrderApi} from "../../../apis/order-fetchers";
+import MoreOptions2, {MoreOptionsItemWithIcon2} from "../../../components/common/MoreOptions2";
+import {customConfirmSwal, customSomethingWentWrongSwal, customSuccessSwal} from "../../../utils/sweetalert-utils";
+import {deleteOrderApi, getOrderInvoiceUrl} from "../../../apis/order-fetchers";
 
 /**
  *
@@ -96,50 +96,65 @@ export default function OrderTable() {
                     orderable: false,
                     createdCell: function (td, cellData, rowData, row, col) {
                         $(td).append(
-                            MoreOptions({
-                                isIndicatorStart: true,
-                                menuItems: [
-                                    MoreOptionsItemWithIcon({
-                                        text: "Edit",
-                                        href: `${pageContext}/edit-order.html?orderId=${rowData.id}`,
-                                        iconClass: "bi bi-pencil-square",
-                                    }),
-                                    MoreOptionsItemWithIcon({
-                                        text: "Delete",
-                                        iconClass: "bi bi-trash",
-                                        onClick: function (e) {
-                                            e.preventDefault();
-                                            customSwal.fire({
-                                                icon: "warning",
-                                                title: "Are you sure?",
-                                                text: `Delete order ${rowData.id}?. You won't be able to revert this!`,
-                                                confirmButtonText: "Yes, delete it!",
-                                                showCancelButton: true,
-                                                allowOutsideClick: false,
-                                                showCloseButton: true,
-                                            }).then(async (result) => {
-                                                if (result.isConfirmed) {
-                                                    deleteOrderApi(rowData.id).done(function (response) {
-                                                        if (response.status) {
-                                                            customSuccessSwal.fire({}).then(function () {
-                                                                $table.DataTable().ajax.reload();
-                                                            })
-                                                        } else {
-                                                            customSomethingWentWrongSwal.fire({}).then(function () {
-                                                                $table.DataTable().ajax.reload();
-                                                            })
-                                                        }
-                                                    }).fail(function () {
+                            <MoreOptions2 isIndicatorStart={true}>
+                                <MoreOptionsItemWithIcon2
+                                    text="Edit"
+                                    href={`${pageContext}/edit-order.html?orderId=${rowData.id}`}
+                                    iconClass="bi bi-pencil-square"
+                                />
+                                <MoreOptionsItemWithIcon2
+                                    text="Delete"
+                                    iconClass="bi bi-trash"
+                                    onClick={function (e) {
+                                        e.preventDefault();
+                                        customConfirmSwal.fire({
+                                            text: `Delete order ${rowData.id}?. You won't be able to revert this!`,
+                                        }).then(async (result) => {
+                                            if (result.isConfirmed) {
+                                                deleteOrderApi(rowData.id).done(function (response) {
+                                                    if (response.status) {
+                                                        customSuccessSwal.fire({}).then(function () {
+                                                            $table.DataTable().ajax.reload();
+                                                        })
+                                                    } else {
                                                         customSomethingWentWrongSwal.fire({}).then(function () {
                                                             $table.DataTable().ajax.reload();
                                                         })
+                                                    }
+                                                }).fail(function () {
+                                                    customSomethingWentWrongSwal.fire({}).then(function () {
+                                                        $table.DataTable().ajax.reload();
                                                     })
-                                                }
-                                            })
-                                        }
-                                    })
-                                ]
-                            })
+                                                })
+                                            }
+                                        })
+                                    }}
+                                />
+                                <MoreOptionsItemWithIcon2
+                                    text="View Invoice"
+                                    iconClass="bi bi-file-earmark-text"
+                                    onClick={function (e) {
+                                        e.preventDefault();
+                                        window.open(getOrderInvoiceUrl(rowData.id, true, false), "_blank");
+                                    }}
+                                />
+                                <MoreOptionsItemWithIcon2
+                                    text="View Invoice With Sketch"
+                                    iconClass="bi bi-file-earmark-text"
+                                    onClick={function (e) {
+                                        e.preventDefault();
+                                        window.open(getOrderInvoiceUrl(rowData.id, true, true), "_blank");
+                                    }}
+                                />
+                                <MoreOptionsItemWithIcon2
+                                    text="Download Invoice"
+                                    iconClass="bi bi-cloud-download"
+                                    onClick={function (e) {
+                                        e.preventDefault();
+                                        window.open(getOrderInvoiceUrl(rowData.id, false, false), "_blank");
+                                    }}
+                                />
+                            </MoreOptions2>
                         )
                     }
                 },
@@ -148,19 +163,40 @@ export default function OrderTable() {
     });
 
     let $component = (
-        $table.addClass("table w-100").append(
-            $("<thead>").append(
-                $("<tr>").append(
-                    $("<th>").css("width", "10%").text("Order ID"),
-                    $("<th>").css("width", "15%").text("Order Date"),
-                    $("<th>").css("width", "20%").text("Remarks"),
-                    $("<th>").css("width", "20%").text("Comments (Internal Use)"),
-                    $("<th>").css("width", "15%").text("Total"),
-                    $("<th>").css("width", "5%")
-                )
-            ),
-            $tbody
-        )
+        <div>
+            <form className="row g-3">
+                <div className="col-md-3 col-lg-2">
+                    <label htmlFor="order-id" className="form-label">Order ID</label>
+                    <input type="text" className="form-control" id="order-id" placeholder="Order ID"/>
+                </div>
+                <div className="col-md-3 col-lg-2">
+                    <label htmlFor="order-date" className="form-label">Order Date</label>
+                    <input type="date" className="form-control" id="order-date" placeholder="Order Date"/>
+                </div>
+                <div className="col-md-3 col-lg-2">
+                    <label htmlFor="order-remarks" className="form-label">Remarks</label>
+                    <input type="text" className="form-control" id="order-remarks" placeholder="Remarks"/>
+                </div>
+                <div className="col-md-3 col-lg-2 align-self-end">
+                    <button type="submit" className="btn btn-primary mt-4">Search</button>
+                </div>
+            </form>
+            <div className="mt-4">
+                <$table className="table w-100">
+                    <thead>
+                    <tr>
+                        <th style={{width: "10%"}}>Order ID</th>
+                        <th style={{width: "15%"}}>Order Date</th>
+                        <th style={{width: "20%"}}>Remarks</th>
+                        <th style={{width: "20%"}}>Comments (Internal Use)</th>
+                        <th style={{width: "15%"}}>Total</th>
+                        <th style={{width: "5%"}}></th>
+                    </tr>
+                    </thead>
+                    <$tbody></$tbody>
+                </$table>
+            </div>
+        </div>
     )
 
     return {

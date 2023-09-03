@@ -10,6 +10,23 @@ export var customSwal =  Swal.mixin({
     buttonsStyling: false
 });
 
+export var customConfirmSwal = Swal.mixin({
+    icon: "warning",
+    title: "Are you sure?",
+    text: `You won't be able to revert this!`,
+    confirmButtonText: "Yes, delete it!",
+    showCancelButton: true,
+    allowOutsideClick: false,
+    showCloseButton: true,
+    customClass: {
+        confirmButton: "btn btn-primary ms-2",
+        cancelButton: "btn btn-outline-secondary ms-2",
+        denyButton: "btn btn-danger ms-2",
+        inputLabel: "form-label"
+    },
+    buttonsStyling: false
+})
+
 export var customSomethingWentWrongSwal = Swal.mixin({
     title: "Oops!",
     text: "Something went wrong",
@@ -39,6 +56,8 @@ export var customSuccessSwal = Swal.mixin({
     },
     buttonsStyling: false
 })
+
+
 
 
 export var customToast = Swal.mixin({

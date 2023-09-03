@@ -1,5 +1,6 @@
 package com.wahshoon.ism.controller;
 
+import com.itextpdf.text.DocumentException;
 import com.wahshoon.ism.datatable.DatatableRequest;
 import com.wahshoon.ism.datatable.JsonDatatableQueryResponse;
 import com.wahshoon.ism.datatable.PaginationCriteria;
@@ -10,7 +11,9 @@ import com.wahshoon.ism.order.Order;
 import com.wahshoon.ism.order.OrderDetail;
 import com.wahshoon.ism.order.OrderService;
 import com.wahshoon.ism.order.OrderVO;
+import com.wahshoon.ism.report.ReportService;
 import com.wahshoon.ism.util.MessageSourceUtil;
+import net.sf.jasperreports.engine.JRException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +22,10 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.Digits;
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 
 
@@ -35,6 +41,9 @@ public class OrderController {
 
     @Autowired
     MessageSourceUtil messageSourceUtil;
+
+    @Autowired
+    ReportService reportService;
 
     @PostMapping(value = "/datatable")
     public JsonDatatableQueryResponse getOrderVOById(
@@ -155,6 +164,37 @@ public class OrderController {
 
 
     // ==============================================
+    // Order Report
+    // ==============================================
+
+    @GetMapping(value = "/{orderId}/invoice")
+    public void getOrderInvoice(
+            @PathVariable("orderId")
+            String orderId,
+            @RequestParam(required=false, defaultValue = "true")boolean inline,
+            @RequestParam(required=false, defaultValue = "false")boolean mergeWithSketch,
+            HttpServletRequest request,
+            HttpServletResponse response) {
+        log.info("Getting order invoice. [orderId={}, inline={}, mergeWithSketch={}]",
+                orderId,
+                inline,
+                mergeWithSketch);
+        String fileName = "invoice_" + orderId + ".pdf";
+        if (inline) {
+            response.setHeader("Content-Disposition", "inline; filename=" + fileName);
+        } else {
+            response.setHeader("Content-Disposition", "attachment; filename=" + fileName);
+        }
+        try {
+            reportService.generateOrderInvoicePdf(orderId, response.getOutputStream(),mergeWithSketch);
+        } catch (IOException | JRException | SQLException | DocumentException e) {
+            log.error("Failed to get order invoice. [orderId={}]", orderId, e);
+            throw new RuntimeException(e);
+        }
+    }
+
+
+    // ==============================================
     // Order Detail
     // ==============================================
 
@@ -194,6 +234,23 @@ public class OrderController {
         orderService.createOrderDetail(orderDetail);
         log.info("Successfully created order detail. [orderId={}]", orderId);
         writeResponse.setStatus(true);
+        return writeResponse;
+    }
+
+    @PostMapping(value = "/{orderIdParam}/line-number/{lineNumberParam}/order-details/delete")
+    public WriteResponse deleteOrderDetail(
+            @PathVariable("orderIdParam") String orderId,
+            @PathVariable("lineNumberParam") Integer lineNumber
+    ) {
+        log.info("Deleting order detail. [orderId={}, lineNumber={}]", orderId, lineNumber);
+        WriteResponse writeResponse = new WriteResponse();
+        if (orderService.deleteOrderDetail(orderId, lineNumber) > 0) {
+            log.info("Successfully deleted order detail. [orderId={}, lineNumber={}]", orderId, lineNumber);
+            writeResponse.setStatus(true);
+        } else {
+            log.info("Failed to delete order detail. [orderId={}, lineNumber={}]", orderId, lineNumber);
+            writeResponse.setStatus(false);
+        }
         return writeResponse;
     }
 }

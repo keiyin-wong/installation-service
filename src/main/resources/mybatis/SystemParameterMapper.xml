@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wahshoon.ism.system.parameter.SystemParameterMapper">
+    <resultMap id="systemParameterResultMap" type="com.wahshoon.ism.system.parameter.SystemParameter">
+        <result property="id" column="sp_id" />
+        <result property="name" column="sp_name" />
+        <result property="description" column="sp_description" />
+        <result property="value" column="sp_value" />
+    </resultMap>
+
+    <sql id="systemParameterColumns">
+        ${alias}id AS sp_id,
+        ${alias}name AS sp_name,
+        ${alias}description AS sp_description,
+        ${alias}value AS sp_value
+    </sql>
+
+    <select id="getSystemParameterByName" resultMap="systemParameterResultMap">
+        SELECT
+        <include refid="systemParameterColumns">
+            <property name="alias" value="" />
+        </include>
+        FROM
+            system_parameter
+        WHERE
+            name = #{name}
+    </select>
+</mapper>

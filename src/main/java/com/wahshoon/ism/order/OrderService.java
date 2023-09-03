@@ -73,4 +73,8 @@ public class OrderService {
         orderDetail.setLineNumber(largestLineNumber + 1);
         orderMapper.createOrderDetail(orderDetail);
     }
+
+    public Integer deleteOrderDetail(String orderId, Integer lineNumber) {
+        return orderMapper.deleteOrderDetail(orderId, lineNumber);
+    }
 }
