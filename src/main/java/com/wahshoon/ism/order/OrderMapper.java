@@ -4,6 +4,7 @@ import com.wahshoon.ism.datatable.SortOrderEnum;
 import com.wahshoon.ism.mapper.annotation.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +15,12 @@ public interface OrderMapper {
     OrderVO getOrderVOWithoutTotalById(String orderId);
 
     List<OrderVO> getOrderVOListForDatatable(
+        @Param("orderId")
+        String orderId,
+        @Param("startDate")
+        Date startDate,
+        @Param("endDate")
+        Date endDate,
         @Param("sortBy") Map<String, SortOrderEnum> sortBy,
         @Param("startRow") Integer startRow,
         @Param("limit") Integer limit
@@ -22,7 +29,14 @@ public interface OrderMapper {
     Integer getLargestOrderIdPlusOne();
     Integer getLargestLineNumberByOrderId(String orderId);
 
-    Integer getOrderCountForDatatable();
+    Integer getOrderCountForDatatable(
+            @Param("orderId")
+            String orderId,
+            @Param("startDate")
+            Date startDate,
+            @Param("endDate")
+            Date endDate
+    );
 
     Integer updateOrder(
             @Param("id")

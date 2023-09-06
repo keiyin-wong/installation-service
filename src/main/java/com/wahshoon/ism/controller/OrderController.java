@@ -17,6 +17,7 @@ import net.sf.jasperreports.engine.JRException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.Digits;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 
 
@@ -47,14 +49,31 @@ public class OrderController {
 
     @PostMapping(value = "/datatable")
     public JsonDatatableQueryResponse getOrderVOById(
+            @RequestParam(required = false)
+            String orderId,
+            @RequestParam(required = false)
+            @DateTimeFormat(pattern = "yyyy-MM-dd")
+            Date startDate,
+            @RequestParam(required = false)
+            @DateTimeFormat(pattern = "yyyy-MM-dd")
+            Date endDate,
             HttpServletRequest request
     ) {
         DatatableRequest datatableRequest = new DatatableRequest(request);
         PaginationCriteria paginationCriteria = datatableRequest.getPaginationRequest();
         log.info("Getting order list for datatable");
-        List<OrderVO> orderVOList = orderService.getOrderVOListForDatatable(paginationCriteria);
+        List<OrderVO> orderVOList = orderService.getOrderVOListForDatatable(
+                orderId,
+                startDate,
+                endDate,
+                paginationCriteria
+        );
         JsonDatatableQueryResponse response = new JsonDatatableQueryResponse();
-        int recordsTotal = orderService.getOrderCountForDatatable();
+        int recordsTotal = orderService.getOrderCountForDatatable(
+                orderId,
+                startDate,
+                endDate
+        );
         log.info("Successfully retrieved order list for datatable. [recordsTotal={}]", recordsTotal);
         response.setData(orderVOList);
         response.setDraw(datatableRequest.getDraw());

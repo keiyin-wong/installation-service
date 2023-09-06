@@ -1,6 +1,30 @@
 import {pageContext} from "../utils/common-utils";
 import moment from "moment";
 
+/**
+ *
+ * @param {function} [assignData=function(){}] - the function to assign data to the datatable
+ *
+ * @returns {{data: data, type: string, url: string}}
+ */
+export function getOrderDatatableApi(assignData) {
+    let assignDataFn = assignData == null ? function () {} : assignData;
+
+    return {
+        url: `${pageContext}/orders/datatable`,
+        type: "POST",
+        data: function (d) {
+            assignData(d);
+        }
+    }
+}
+
+/**
+ * Get the order view object, including the order details list
+ *
+ * @param id
+ * @returns {*|jQuery}
+ */
 export function getOrderVOApi(id) {
     return $.ajax({
         url: `${pageContext}/orders/${id}/vo`,

@@ -1,9 +1,10 @@
 import {convertNumberToCurrency, pageContext} from "../../../utils/common-utils";
-import {convertUnixTimestampToMomentDate} from "../../../utils/moment-utils";
+import {convertUnixTimestampToMomentDate, dateRangesOptions} from "../../../utils/moment-utils";
 import {jqueryDatatablePreXhrProcessing} from "../../../utils/jquery-utils";
 import MoreOptions2, {MoreOptionsItemWithIcon2} from "../../../components/common/MoreOptions2";
 import {customConfirmSwal, customSomethingWentWrongSwal, customSuccessSwal} from "../../../utils/sweetalert-utils";
-import {deleteOrderApi, getOrderInvoiceUrl} from "../../../apis/order-fetchers";
+import {deleteOrderApi, getOrderDatatableApi, getOrderInvoiceUrl} from "../../../apis/order-fetchers";
+import ClearableInput from "../../../components/common/ClearableInput";
 
 /**
  *
@@ -12,19 +13,33 @@ import {deleteOrderApi, getOrderInvoiceUrl} from "../../../apis/order-fetchers";
  */
 export default function OrderTable() {
 
-    // ========================================
+    // ================[ Jquery Elements ]====================
     let $table = $("<table>");
     let $tbody = $("<tbody>");
+
+    let $orderIdInput = <input/>;
+    let $orderDateInput = <input/>;
+    let $orderStartDateInput = <input/>;
+    let $orderEndDateInput = <input/>;
+
+    // ================[End of Jquery Elements ]===============
 
     $table.ready(function () {
         $table.on('preXhr.dt', function ( e, settings, data ) {
             jqueryDatatablePreXhrProcessing(e, 6)
         }).DataTable({
             serverSide: true,
-            ajax: {
-                url: `${pageContext}/orders/datatable`,
-                type: "POST",
-            },
+            ajax: getOrderDatatableApi(function (d) {
+                if ($orderIdInput.val().trim() !== "") {
+                    d.orderId = $orderIdInput.val();
+                }
+                if ($orderStartDateInput.val().trim() !== "") {
+                    d.startDate = $orderStartDateInput.val();
+                }
+                if ($orderEndDateInput.val().trim() !== "") {
+                    d.endDate = $orderEndDateInput.val();
+                }
+            }),
             language: {
                 processing: '',
                 paginate: {
@@ -164,23 +179,79 @@ export default function OrderTable() {
 
     let $component = (
         <div>
-            <form className="row g-3">
-                <div className="col-md-3 col-lg-2">
-                    <label htmlFor="order-id" className="form-label">Order ID</label>
-                    <input type="text" className="form-control" id="order-id" placeholder="Order ID"/>
+            <div className="row gy-2">
+                <div className="col-md-10">
+                    <form className="row g-3">
+                        <div className="col-sm-6 col-lg-4 col-xl-3">
+                            <label htmlFor="order-id" className="form-label">Order ID</label>
+                            <ClearableInput>
+                                <$orderIdInput
+                                    type="text"
+                                    className="form-control"
+                                    placeholder="Order ID"
+                                />
+                            </ClearableInput>
+                        </div>
+                        <div className="col-sm-6 col-lg-4 col-xl-3">
+                            <label htmlFor="order-date" className="form-label">Order Date</label>
+                            <ClearableInput
+                                additionalClearCallback={function () {
+                                    $orderStartDateInput.val('');
+                                    $orderEndDateInput.val('');
+                                }}
+                            >
+                                <$orderDateInput
+                                    className="form-control"
+                                    type="text"
+                                    id="order-date"
+                                    placeholder="Order Date"
+                                    onReady={() => {
+                                        $orderDateInput.daterangepicker({
+                                            showDropdowns: true,
+                                            locale: {
+                                                cancelLabel: 'Clear'
+                                            },
+                                            ranges: dateRangesOptions,
+                                            autoUpdateInput: false,
+                                        }).on('apply.daterangepicker', function (ev, picker) {
+                                            $(this).val(picker.startDate.format('DD/MM/YYYY') + ' - ' + picker.endDate.format('DD/MM/YYYY')).trigger("input");
+                                            $orderStartDateInput.val(picker.startDate.format('YYYY-MM-DD'));
+                                            $orderEndDateInput.val(picker.endDate.format('YYYY-MM-DD'));
+                                        }).on('cancel.daterangepicker', function (ev, picker) {
+                                            $(this).val('').trigger("input");
+                                            $orderStartDateInput.val('');
+                                            $orderEndDateInput.val('');
+                                        });
+                                    }}
+                                />
+                            </ClearableInput>
+                            <$orderStartDateInput type="hidden" />
+                            <$orderEndDateInput type="hidden" />
+                        </div>
+                        <div className="col-sm-6 col-lg-4 col-xl-3">
+                            <label htmlFor="order-remarks" className="form-label">Remarks</label>
+                            <input type="text" className="form-control" id="order-remarks" placeholder="Remarks"/>
+                        </div>
+                        <div className="col-sm-6 col-lg-4 col-xl-3">
+                            <label htmlFor="order-remarks" className="form-label">Comments</label>
+                            <input type="text" className="form-control" id="order-remarks"
+                                   placeholder="Comments"/>
+                        </div>
+                    </form>
                 </div>
-                <div className="col-md-3 col-lg-2">
-                    <label htmlFor="order-date" className="form-label">Order Date</label>
-                    <input type="date" className="form-control" id="order-date" placeholder="Order Date"/>
+                <div className="col-md-2 align-self-end">
+                    <button
+                        type="submit"
+                        className="btn btn-light"
+                        onClick={function (e) {
+                            e.preventDefault();
+                            $table.DataTable().ajax.reload();
+                        }}
+                    >
+                        <i className="bi bi-search"></i>
+                    </button>
                 </div>
-                <div className="col-md-3 col-lg-2">
-                    <label htmlFor="order-remarks" className="form-label">Remarks</label>
-                    <input type="text" className="form-control" id="order-remarks" placeholder="Remarks"/>
-                </div>
-                <div className="col-md-3 col-lg-2 align-self-end">
-                    <button type="submit" className="btn btn-primary mt-4">Search</button>
-                </div>
-            </form>
+            </div>
             <div className="mt-4">
                 <$table className="table w-100">
                     <thead>

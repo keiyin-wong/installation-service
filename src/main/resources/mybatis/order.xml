@@ -82,6 +82,15 @@
             GROUP BY
                 o.id
         ) a
+        <where>
+            <if test="orderId != null">
+                <bind name="orderID" value="'%' + orderId + '%'"/>
+                AND a.id LIKE #{orderID}
+            </if>
+            <if test="startDate != null and endDate != null">
+                AND a.date BETWEEN #{startDate,jdbcType=DATE} AND #{endDate,jdbcType=DATE}
+            </if>
+        </where>
         <if test="sortBy != null and sortBy.size() > 0" >
             ORDER BY
             <foreach collection="sortBy" index="key" item="sort" separator=",">
@@ -100,6 +109,15 @@
         FROM
             `order`
         ]]>
+        <where>
+            <if test="orderId != null">
+                <bind name="orderID" value="'%' + orderId + '%'"/>
+                AND id LIKE #{orderID}
+            </if>
+            <if test="startDate != null and endDate != null">
+                AND date BETWEEN #{startDate,jdbcType=DATE} AND #{endDate,jdbcType=DATE}
+            </if>
+        </where>
     </select>
 
     <select id="getOrderVOWithoutTotalById" resultMap="OrderVOWithoutTotalResultMap">

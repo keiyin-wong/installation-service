@@ -10,27 +10,30 @@ import "./style/ClearableInput.scss";
  * @returns {jQuery}
  * @constructor
  */
-export default function ClearableInput(props) {
-    let $input = props?.input ?? null;
+export default function ClearableInput(props, children) {
+    if (children instanceof Array) {
+        children = children[0];
+    }
+
     let clearCallback = props?.additionalClearCallback ?? function() {};
 
     let $clearableIcon = (
         $("<i>").addClass("bi bi-x clearable-icon")
             .on("click", function(e) {
                 e.preventDefault();
-                $input.val("").trigger("input");
+                children.val("").trigger("input");
                 clearCallback();
             })
     )
     $clearableIcon.hide();
 
-    $input.on("input", function() {
+    children.on("input", function() {
         $clearableIcon.toggle(this.value !== "");
     })
 
     return (
         $("<span>").addClass("clearable w-100 d-flex align-items-center").append(
-            $input,
+            children,
             $clearableIcon
         )
     )

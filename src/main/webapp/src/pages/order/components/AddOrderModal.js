@@ -108,9 +108,9 @@ export default function AddOrderModal(props) {
                             <div className="row mb-3">
                                 <label className="col-sm-2 col-form-label">Order Date</label>
                                 <div className="col-sm-10">
-                                    <ClearableInput
-                                        input={<$dateInput className="form-control"/>}
-                                    />
+                                    <ClearableInput>
+                                        <$dateInput className="form-control"/>
+                                    </ClearableInput>
                                 </div>
                             </div>
                             <div className="row mb-3">

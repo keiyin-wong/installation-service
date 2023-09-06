@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -28,16 +29,38 @@ public class OrderService {
         return orderVO;
     }
 
-    public List<OrderVO> getOrderVOListForDatatable(PaginationCriteria paginationCriteria) {
+    /**
+     * Get order vo list for datatable, without order details
+     *
+     * @param paginationCriteria
+     * @return
+     */
+    public List<OrderVO> getOrderVOListForDatatable(
+            String orderId,
+            Date startDate,
+            Date endDate,
+            PaginationCriteria paginationCriteria
+    ) {
         return orderMapper.getOrderVOListForDatatable(
+                orderId,
+                startDate,
+                endDate,
                 paginationCriteria.getSortBy(),
                 paginationCriteria.getRowStart(),
                 paginationCriteria.getPageSize()
         );
     }
 
-    public Integer getOrderCountForDatatable() {
-        return orderMapper.getOrderCountForDatatable();
+    public Integer getOrderCountForDatatable(
+            String orderId,
+            Date startDate,
+            Date endDate
+    ) {
+        return orderMapper.getOrderCountForDatatable(
+                orderId,
+                startDate,
+                endDate
+        );
     }
 
     public Integer updateOrder(String orderId, Order order) {

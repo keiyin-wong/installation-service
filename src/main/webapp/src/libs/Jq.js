@@ -14,8 +14,11 @@ export default class Jq {
         let $element = $(element);
         assignAttributes($element, props)
         appendChildren($element, children)
-
         return $element
+    }
+
+    static fragment(props, ...children) {
+        return children;
     }
 }
 
@@ -77,23 +80,23 @@ function assignAttributes($element, props) {
 
 function appendChildren($parent, children) {
     children.forEach((child) => {
-        // if (child instanceof $) {
-        //     $parent.append(child);
-        // }
-        // else {
-        //     $parent.append(
-        //         $(document.createTextNode(child))
-        //     );
-        // }
         if (typeof child == 'string') {
-            $parent.append(
-                $(document.createTextNode(child))
-            );
+            if ($parent.attr("isDangerousHtml")) {
+                $parent.append(child);
+            } else {
+                $parent.append(
+                    $(document.createTextNode(child))
+                );
+            }
+            // $parent.append(child);
         } else if (child instanceof $) {
             $parent.append(child);
         } else {
-            // console.log("child", child)
-            $parent.append(child);
+            if (child instanceof Array) {
+                appendChildren($parent, child);
+            } else {
+                $parent.append(child);
+            }
         }
     });
 }
