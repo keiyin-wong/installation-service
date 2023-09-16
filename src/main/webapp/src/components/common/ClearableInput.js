@@ -4,7 +4,6 @@ import "./style/ClearableInput.scss";
  *
  * Jquery component to create clearable input
  *
- * @param {jQuery|*} props.input- The input element
  * @param {function} [props.additionalClearCallback] - The additional callback to be called when clear button is clicked
  *
  * @returns {jQuery}

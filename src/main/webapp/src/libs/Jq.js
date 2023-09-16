@@ -10,11 +10,15 @@ export default class Jq {
             return tag;
         }
 
-        const element = document.createElement(tag);
-        let $element = $(element);
-        assignAttributes($element, props)
-        appendChildren($element, children)
-        return $element
+        if (typeof tag == 'string' || tag instanceof String) {
+            const element = document.createElement(tag);
+            let $element = $(element);
+            assignAttributes($element, props)
+            appendChildren($element, children)
+            return $element
+        }
+
+        return tag;
     }
 
     static fragment(props, ...children) {

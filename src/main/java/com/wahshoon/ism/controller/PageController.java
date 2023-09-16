@@ -43,4 +43,8 @@ public class PageController {
         return new ModelAndView(ViewConstant.EDIT_ORDER, parameters);
     }
 
+    @RequestMapping(value = "/service.html")
+    public ModelAndView getServicePage() {
+        return new ModelAndView(ViewConstant.SERVICE_PAGE);
+    }
 }

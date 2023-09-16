@@ -7,11 +7,11 @@ import moment from "moment";
  *
  * @returns {{data: data, type: string, url: string}}
  */
-export function getOrderDatatableApi(assignData) {
+export function getOrderDatatableVOApi(assignData) {
     let assignDataFn = assignData == null ? function () {} : assignData;
 
     return {
-        url: `${pageContext}/orders/datatable`,
+        url: `${pageContext}/orders/datatable/vo`,
         type: "POST",
         data: function (d) {
             assignData(d);

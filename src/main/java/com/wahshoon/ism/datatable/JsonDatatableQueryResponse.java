@@ -18,7 +18,7 @@ public class JsonDatatableQueryResponse {
     @SerializedName("data")
     List<?> data;
 
-    public String getJson() {
+    public String toJson() {
         return new Gson().toJson(this);
     }
 

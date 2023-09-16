@@ -90,6 +90,14 @@
             <if test="startDate != null and endDate != null">
                 AND a.date BETWEEN #{startDate,jdbcType=DATE} AND #{endDate,jdbcType=DATE}
             </if>
+            <if test="remarks != null">
+                <bind name="remarks" value="'%' + remarks + '%'"/>
+                AND a.remarks LIKE #{remarks}
+            </if>
+            <if test="comments != null">
+                <bind name="comments" value="'%' + comments + '%'"/>
+                AND a.comments LIKE #{comments}
+            </if>
         </where>
         <if test="sortBy != null and sortBy.size() > 0" >
             ORDER BY
@@ -116,6 +124,14 @@
             </if>
             <if test="startDate != null and endDate != null">
                 AND date BETWEEN #{startDate,jdbcType=DATE} AND #{endDate,jdbcType=DATE}
+            </if>
+            <if test="remarks != null">
+                <bind name="remarks" value="'%' + remarks + '%'"/>
+                AND remarks LIKE #{remarks}
+            </if>
+            <if test="comments != null">
+                <bind name="comments" value="'%' + comments + '%'"/>
+                AND comments LIKE #{comments}
             </if>
         </where>
     </select>

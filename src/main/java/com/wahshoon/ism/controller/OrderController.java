@@ -14,6 +14,7 @@ import com.wahshoon.ism.order.OrderVO;
 import com.wahshoon.ism.report.ReportService;
 import com.wahshoon.ism.util.MessageSourceUtil;
 import net.sf.jasperreports.engine.JRException;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.Digits;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
@@ -47,16 +50,17 @@ public class OrderController {
     @Autowired
     ReportService reportService;
 
-    @PostMapping(value = "/datatable")
+    @PostMapping(value = "/datatable/vo")
     public JsonDatatableQueryResponse getOrderVOById(
-            @RequestParam(required = false)
-            String orderId,
+            @RequestParam(required = false) String orderId,
             @RequestParam(required = false)
             @DateTimeFormat(pattern = "yyyy-MM-dd")
             Date startDate,
             @RequestParam(required = false)
             @DateTimeFormat(pattern = "yyyy-MM-dd")
             Date endDate,
+            @RequestParam(required = false) String remarks,
+            @RequestParam(required = false) String comments,
             HttpServletRequest request
     ) {
         DatatableRequest datatableRequest = new DatatableRequest(request);
@@ -66,13 +70,17 @@ public class OrderController {
                 orderId,
                 startDate,
                 endDate,
+                remarks,
+                comments,
                 paginationCriteria
         );
         JsonDatatableQueryResponse response = new JsonDatatableQueryResponse();
         int recordsTotal = orderService.getOrderCountForDatatable(
                 orderId,
                 startDate,
-                endDate
+                endDate,
+                remarks,
+                comments
         );
         log.info("Successfully retrieved order list for datatable. [recordsTotal={}]", recordsTotal);
         response.setData(orderVOList);
@@ -204,8 +212,10 @@ public class OrderController {
         } else {
             response.setHeader("Content-Disposition", "attachment; filename=" + fileName);
         }
+        OutputStream responseOutputStream = null;
         try {
-            reportService.generateOrderInvoicePdf(orderId, response.getOutputStream(),mergeWithSketch);
+            responseOutputStream = response.getOutputStream();
+            reportService.generateOrderInvoicePdf(orderId, responseOutputStream, mergeWithSketch);
         } catch (IOException | JRException | SQLException | DocumentException e) {
             log.error("Failed to get order invoice. [orderId={}]", orderId, e);
             throw new RuntimeException(e);

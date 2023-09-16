@@ -21,4 +21,9 @@
         <put-attribute name="body" value="/dist/pages/order/edit-order/edit-order.jsp" />
     </definition>
 
+    <definition name="service" extends="mainTemplate">
+        <put-attribute name="title" value="Service Page" type="string" />
+        <put-attribute name="body" value="/dist/pages/service/service.jsp" />
+    </definition>
+
 </tiles-definitions>

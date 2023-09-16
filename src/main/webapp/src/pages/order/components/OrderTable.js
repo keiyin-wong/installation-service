@@ -3,7 +3,11 @@ import {convertUnixTimestampToMomentDate, dateRangesOptions} from "../../../util
 import {jqueryDatatablePreXhrProcessing} from "../../../utils/jquery-utils";
 import MoreOptions2, {MoreOptionsItemWithIcon2} from "../../../components/common/MoreOptions2";
 import {customConfirmSwal, customSomethingWentWrongSwal, customSuccessSwal} from "../../../utils/sweetalert-utils";
-import {deleteOrderApi, getOrderDatatableApi, getOrderInvoiceUrl} from "../../../apis/order-fetchers";
+import {
+    deleteOrderApi,
+    getOrderDatatableVOApi,
+    getOrderInvoiceUrl
+} from "../../../apis/order-fetchers";
 import ClearableInput from "../../../components/common/ClearableInput";
 
 /**
@@ -21,6 +25,8 @@ export default function OrderTable() {
     let $orderDateInput = <input/>;
     let $orderStartDateInput = <input/>;
     let $orderEndDateInput = <input/>;
+    let $orderRemarksInput = <input/>;
+    let $orderCommentsInput = <input/>;
 
     // ================[End of Jquery Elements ]===============
 
@@ -29,7 +35,7 @@ export default function OrderTable() {
             jqueryDatatablePreXhrProcessing(e, 6)
         }).DataTable({
             serverSide: true,
-            ajax: getOrderDatatableApi(function (d) {
+            ajax: getOrderDatatableVOApi(function (d) {
                 if ($orderIdInput.val().trim() !== "") {
                     d.orderId = $orderIdInput.val();
                 }
@@ -38,6 +44,12 @@ export default function OrderTable() {
                 }
                 if ($orderEndDateInput.val().trim() !== "") {
                     d.endDate = $orderEndDateInput.val();
+                }
+                if ($orderRemarksInput.val().trim() !== "") {
+                    d.remarks = $orderRemarksInput.val();
+                }
+                if ($orderCommentsInput.val().trim() !== "") {
+                    d.comments = $orderCommentsInput.val();
                 }
             }),
             language: {
@@ -230,12 +242,25 @@ export default function OrderTable() {
                         </div>
                         <div className="col-sm-6 col-lg-4 col-xl-3">
                             <label htmlFor="order-remarks" className="form-label">Remarks</label>
-                            <input type="text" className="form-control" id="order-remarks" placeholder="Remarks"/>
+                            <ClearableInput>
+                                <$orderRemarksInput
+                                    type="text"
+                                    className="form-control"
+                                    id="order-remarks"
+                                    placeholder="Remarks"
+                                />
+                            </ClearableInput>
                         </div>
                         <div className="col-sm-6 col-lg-4 col-xl-3">
                             <label htmlFor="order-remarks" className="form-label">Comments</label>
-                            <input type="text" className="form-control" id="order-remarks"
-                                   placeholder="Comments"/>
+                            <ClearableInput>
+                                <$orderCommentsInput
+                                    type="text"
+                                    className="form-control"
+                                    id="order-remarks"
+                                    placeholder="Comments"
+                                />
+                            </ClearableInput>
                         </div>
                     </form>
                 </div>

@@ -26,6 +26,22 @@
         />
     </resultMap>
 
+    <resultMap id="ServiceVOResultMapForCollection" type="com.wahshoon.ism.service.ServiceVO">
+        <result property="id" column="s_id" />
+        <result property="descriptionChinese" column="s_description_chinese" />
+        <result property="descriptionEnglish" column="s_description_english" />
+        <result property="price" column="s_price" />
+        <result property="differentPrice" column="s_is_different_price" />
+        <result property="calculationType" column="s_calculation_type" />
+        <!-- left is in select statement -->
+        <collection
+            property="serviceDiffPrices"
+            column="{serviceId=s_id}"
+            select="getServiceDiffPriceList"
+        />
+    </resultMap>
+
+
     <resultMap id="ServiceDiffPriceResultMap" type="com.wahshoon.ism.service.ServiceDiffPrice">
         <result property="serviceId" column="sdp_service_id" />
         <result property="height" column="sdp_height" />
@@ -66,6 +82,24 @@
         ]]>
     </select>
 
+    <select id="getServiceVOForDatatable" resultMap="ServiceVOResultMapForCollection">
+        SELECT
+            <include refid="serviceColumns">
+                <property name="alias" value=""/>
+            </include>
+        FROM
+            service
+        <if test="sortBy != null and sortBy.size() > 0" >
+            ORDER BY
+            <foreach collection="sortBy" index="key" item="sort" separator=",">
+                ${key} ${sort.value}
+            </foreach>
+        </if>
+        <if test="startRow != null and limit != null">
+            LIMIT #{startRow}, #{limit}
+        </if>
+    </select>
+
     <!--Service Diff Price-->
     <sql id="serviceDiffPriceColumns">
         ${alias}service_id as sdp_service_id,
@@ -73,4 +107,14 @@
         ${alias}price as sdp_price
     </sql>
 
+    <select id="getServiceDiffPriceList" resultMap="ServiceDiffPriceResultMap">
+        SELECT
+            <include refid="serviceDiffPriceColumns">
+                <property name="alias" value=""/>
+            </include>
+        FROM
+            service_diff_price
+        WHERE
+            service_id = #{serviceId}
+    </select>
 </mapper>

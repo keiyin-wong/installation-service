@@ -32,19 +32,29 @@ public class OrderService {
     /**
      * Get order vo list for datatable, without order details
      *
-     * @param paginationCriteria
-     * @return
+     * @param orderId - the order id
+     * @param startDate - the start date
+     * @param endDate - the end date
+     * @param remarks - the remarks, for internal use
+     * @param comments - the comments, for external use, will be shown to customer
+     * @param paginationCriteria - the pagination criteria, contains sort by, start row, and limit
+     *
+     * @return - the order vo list
      */
     public List<OrderVO> getOrderVOListForDatatable(
             String orderId,
             Date startDate,
             Date endDate,
+            String remarks,
+            String comments,
             PaginationCriteria paginationCriteria
     ) {
         return orderMapper.getOrderVOListForDatatable(
                 orderId,
                 startDate,
                 endDate,
+                remarks,
+                comments,
                 paginationCriteria.getSortBy(),
                 paginationCriteria.getRowStart(),
                 paginationCriteria.getPageSize()
@@ -54,12 +64,16 @@ public class OrderService {
     public Integer getOrderCountForDatatable(
             String orderId,
             Date startDate,
-            Date endDate
+            Date endDate,
+            String remarks,
+            String comments
     ) {
         return orderMapper.getOrderCountForDatatable(
                 orderId,
                 startDate,
-                endDate
+                endDate,
+                remarks,
+                comments
         );
     }
 

@@ -14,13 +14,26 @@ public interface OrderMapper {
 
     OrderVO getOrderVOWithoutTotalById(String orderId);
 
+    /**
+     * Get order vo list for datatable, without order details
+     *
+     * @param orderId - the order id
+     * @param startDate - the start date
+     * @param endDate - the end date
+     * @param remarks - the remarks, for internal use
+     * @param comments - the comments, for external use, will be shown to customer
+     * @param sortBy - the sort by, key is the column name, value is the sort order
+     * @param startRow - the start row
+     * @param limit - the limit
+     *
+     * @return - the order vo list
+     */
     List<OrderVO> getOrderVOListForDatatable(
-        @Param("orderId")
-        String orderId,
-        @Param("startDate")
-        Date startDate,
-        @Param("endDate")
-        Date endDate,
+        @Param("orderId") String orderId,
+        @Param("startDate") Date startDate,
+        @Param("endDate") Date endDate,
+        @Param("remarks") String remarks,
+        @Param("comments") String comments,
         @Param("sortBy") Map<String, SortOrderEnum> sortBy,
         @Param("startRow") Integer startRow,
         @Param("limit") Integer limit
@@ -30,12 +43,11 @@ public interface OrderMapper {
     Integer getLargestLineNumberByOrderId(String orderId);
 
     Integer getOrderCountForDatatable(
-            @Param("orderId")
-            String orderId,
-            @Param("startDate")
-            Date startDate,
-            @Param("endDate")
-            Date endDate
+            @Param("orderId") String orderId,
+            @Param("startDate") Date startDate,
+            @Param("endDate") Date endDate,
+            @Param("remarks") String remarks,
+            @Param("comments") String comments
     );
 
     Integer updateOrder(
